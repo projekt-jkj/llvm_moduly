@@ -1,2 +1,3 @@
-llvm-project_*/
-mingw-w64_*/
+src/
+build/
+install/
