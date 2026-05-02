@@ -22,3 +22,12 @@ INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
 # other variables
 
 LOG_FILE="/dev/null";
+
+log_begin()
+{
+	echo "=== [$1] $(date '+%H:%M:%S') ===";
+}
+log_ok()
+{
+	echo "=== [$1] OK ===";
+}

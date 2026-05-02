@@ -3,6 +3,7 @@ set -ue;
 
 INIT_OPTIONS=();
 LLVM_OPTIONS=();
+COMMON_OPTIONS=();
 
 for a in "$@"
 do
@@ -27,8 +28,12 @@ case $a in
 	-install_folder=*)
 		LLVM_OPTIONS+=("-install_folder=${a#*=}");
 		;;
+
+	-log=*)
+		COMMON_OPTIONS+=("-log=${a#*=}");
+		;;
 	esac
 done
 
-./init_repositories.sh "${INIT_OPTIONS[@]}";
-./build_llvm.sh "${LLVM_OPTIONS[@]}";
+./init_repositories.sh "${COMMON_OPTIONS[@]}" "${INIT_OPTIONS[@]}";
+./build_llvm.sh "${COMMON_OPTIONS[@]}" "${LLVM_OPTIONS[@]}";
