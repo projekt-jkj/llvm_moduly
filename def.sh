@@ -24,6 +24,37 @@ else
 	INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
 fi
 
+# platforms
+
+join()
+{
+	local out=$1;
+	local IFS=";";
+	shift;
+
+	declare -g "$out=$*"
+}
+
+if [ -v ARCHITECTURES ]
+then
+	readarray -d "," -t arch_list <<< "$ARCHITECTURES";
+	llvm_archs_list=();
+	for arch in "${arch_list[@]}"
+	do
+		case ${arch,,} in
+			x86|x64|amd64)
+				llvm_archs_list+=("X86");
+				;;
+			*)
+				llvm_archs_list+=("$arch");
+				;;
+		esac
+	done
+	join LLVM_ARCHITECTURES "${llvm_archs_list[@]}";
+else
+	LLVM_ARCHITECTURES="host";
+fi
+
 # other variables
 
 ROOT=$(pwd);
