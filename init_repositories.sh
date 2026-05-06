@@ -31,7 +31,7 @@ clone()
 	log_begin "Cloning $2";
 	if [ ! -d "$3" ]
 	then
-		git clone --depth 1 -b "$1" "$2" "$3" >"$LOG_FILE";
+		git clone --depth 1 -q -b "$1" "$2" "$3" >>"$LOG_FILE";
 	fi
 	log_ok "Cloning $2";
 }

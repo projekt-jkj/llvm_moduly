@@ -1,7 +1,7 @@
 # LLVM variables
 
 LLVM_MODULY_VERSION="${LLVM_MODULY_VERSION:-22.1.5}";
-LLVM_TAG="${LLVM_TAG:-llvmorg-22.1.5}";
+LLVM_TAG="${LLVM_TAG:-llvmorg-$LLVM_MODULY_VERSION}";
 LLVM_SOURCE="$(pwd)/src/llvm_${LLVM_TAG}";
 LLVM_BUILD="$(pwd)/build/llvm_${LLVM_TAG}";
 
@@ -17,11 +17,17 @@ fi
 
 # install variables
 
-INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
+if [ -v INSTALL_PREFIX ]
+then
+	INSTALL_BASE="${INSTALL_PREFIX}/install_$LLVM_MODULY_VERSION";
+else
+	INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
+fi
 
 # other variables
 
-LOG_FILE="/dev/null";
+ROOT=$(pwd);
+LOG_FILE="${LOG_FILE:-/dev/null}";
 
 log_begin()
 {
