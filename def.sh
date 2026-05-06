@@ -24,6 +24,12 @@ else
 	INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
 fi
 
+install()
+{
+    cmake --install . --strip --component "$1" \
+		  --prefix "$INSTALL_BASE/$2"  >>"$LOG_FILE";
+}
+
 # platforms
 
 join()

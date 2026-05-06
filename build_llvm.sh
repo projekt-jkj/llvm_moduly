@@ -100,5 +100,24 @@ cmake -G Ninja \
 
 log_ok "LLVM configure";
 
-cmake --build . "-j$CORES";
+cmake --build . "-j$CORES" >>"$LOG_FILE";
 log_ok "LLVM build";
+
+if [ "$BUILD_ONLY" = "ON" ]
+then
+	exit 1;
+elif [ "$BUILD_TYPE" = "test" ]
+then
+	log_begin "LLVM tests";
+	cmake --build . --target check "-j$CORES" >>"$LOG_FILE";
+	log_ok "LLVM tests";
+	exit 1;
+else
+	install distribution llvm;
+
+	install libclang-headers	clang_lib;
+	install libclang			clang_lib;
+	install clang-libraries		clang_lib;
+
+	log_ok "LLVM install";
+fi
