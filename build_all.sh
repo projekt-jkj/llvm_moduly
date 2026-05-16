@@ -1,9 +1,10 @@
 #!/bin/bash
 set -ue;
 
+COMMON_OPTIONS=();
 INIT_OPTIONS=();
 LLVM_OPTIONS=();
-COMMON_OPTIONS=();
+MINGW_OPTIONS=();
 
 for a in "$@"
 do
@@ -14,9 +15,13 @@ case $a in
 		;;
 	-mingw)
 		INIT_OPTIONS+=("-mingw");
+		MINGW_OPTIONS+=("-mingw");
+		INCLUDE_MINGW="ON";
 		;;
 	-mingw=*)
 		INIT_OPTIONS+=("-mingw=${a#*=}");
+		MINGW_OPTIONS+=("-mingw=${a#*=}");
+		INCLUDE_MINGW="ON";
 		;;
 
 	-build_type=*)
@@ -27,9 +32,11 @@ case $a in
 		;;
 	-install_prefix=*)
 		LLVM_OPTIONS+=("-install_prefix=${a#*=}");
+		MINGW_OPTIONS+=("-install_prefix=${a#*=}");
 		;;
     -cores=*)
 		LLVM_OPTIONS+=("-cores=${a#*=}");
+		MINGW_OPTIONS+=("-cores=${a#*=}");
         ;;
     -include_docs)
 		LLVM_OPTIONS+=("-include_docs");
@@ -45,4 +52,10 @@ case $a in
 done
 
 ./init_repositories.sh "${COMMON_OPTIONS[@]}" "${INIT_OPTIONS[@]}";
-./build_llvm.sh        "${COMMON_OPTIONS[@]}" "${LLVM_OPTIONS[@]}";
+
+if [ -n "${INCLUDE_MINGW:-}" ]
+then
+	./build_mingw.sh "${COMMON_OPTIONS[@]}" "${MINGW_OPTIONS[@]}";
+fi
+
+./build_llvm.sh "${COMMON_OPTIONS[@]}" "${LLVM_OPTIONS[@]}";
