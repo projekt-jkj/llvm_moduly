@@ -17,15 +17,25 @@ CORE_COMPONENTS="${LLVM_TOOLS};${COMPILER_EXECUTABLES}";
 for a in "$@"
 do
 case $a in
+	-target=*)
+		TARGET="-target=${a#*=}";
+		;;
+	-log=*)
+		LOG_FILE="${a#*=}";
+		;;
+
     -llvm=*)
-        LLVM_VERSION="${a#*=}";
+        LLVM_TAG="${a#*=}";
         ;;
-    -install_prefix=*)
-        INSTALL_PREFIX="${a#*=}";
+    -mingw=*)
+        MINGW_TAG="${a#*=}";
         ;;
 
     -build_type=*)
         BUILD_TYPE="${a#*=}";
+        ;;
+    -install_prefix=*)
+        INSTALL_PREFIX="${a#*=}";
         ;;
     -architectures=*)
         ARCHITECTURES="${a#*=}";
@@ -35,13 +45,6 @@ case $a in
         ;;
     -include_docs)
         INCLUDE_DOCS="ON";
-        ;;
-	-build_only)
-		BUILD_ONLY="ON";
-        ;;
-	
-	-log=*)
-		LOG_FILE="${a#*=}";
 		;;
     *)
         echo "Unknown argument '$a'";

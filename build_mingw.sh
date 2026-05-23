@@ -7,21 +7,21 @@ CORES=4;
 for a in "$@"
 do
 case $a in
-    -mingw)
-		INCLUDE_MINGW="ON";
+	-target=*)
+		TARGET="-target=${a#*=}";
+		;;
+	-log=*)
+		LOG_FILE="${a#*=}";
         ;;
+
     -mingw=*)
         MINGW_TAG="${a#*=}";
-		INCLUDE_MINGW="ON";
         ;;
     -install_prefix=*)
         INSTALL_PREFIX="${a#*=}";
         ;;
     -cores=*)
         CORES="${a#*=}";
-        ;;
-	-log=*)
-		LOG_FILE="${a#*=}";
 		;;
     *)
         echo "Unknown argument '$a'";

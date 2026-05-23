@@ -4,18 +4,18 @@ set -ue;
 for a in "$@"
 do
 case $a in
-	-llvm=*)
-		LLVM_TAG="${a#*=}";
-		;;
-	-mingw)
-		INCLUDE_MINGW="ON";
-		;;
-	-mingw=*)
-		INCLUDE_MINGW="ON";
-		MINGW_TAG="${a#*=}";
+	-target=*)
+		TARGET="-target=${a#*=}";
 		;;
 	-log=*)
 		LOG_FILE="${a#*=}";
+		;;
+
+	-llvm=*)
+		LLVM_TAG="${a#*=}";
+		;;
+	-mingw=*)
+		MINGW_TAG="${a#*=}";
 		;;
 	*)
 		echo "Unknown argument '$a'";

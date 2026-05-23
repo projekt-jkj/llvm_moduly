@@ -9,30 +9,33 @@ MINGW_OPTIONS=();
 for a in "$@"
 do
 case $a in
+	-target=*)
+		TARGET="-target=${a#*=}";
+		COMMON_OPTIONS+=("$TARGET");
+		;;
+	-log=*)
+		COMMON_OPTIONS+=("-log=${a#*=}");
+		;;
+		
 	-llvm=*)
 		INIT_OPTIONS+=("-llvm=${a#*=}");
 		LLVM_OPTIONS+=("-llvm=${a#*=}");
 		;;
-	-mingw)
-		INIT_OPTIONS+=("-mingw");
-		MINGW_OPTIONS+=("-mingw");
-		INCLUDE_MINGW="ON";
-		;;
 	-mingw=*)
 		INIT_OPTIONS+=("-mingw=${a#*=}");
+		LLVM_OPTIONS+=("-mingw=${a#*=}");
 		MINGW_OPTIONS+=("-mingw=${a#*=}");
-		INCLUDE_MINGW="ON";
 		;;
 
 	-build_type=*)
 		LLVM_OPTIONS+=("-build_type=${a#*=}");
 		;;
-	-architectures=*)
-		LLVM_OPTIONS+=("-architectures=${a#*=}");
-		;;
 	-install_prefix=*)
 		LLVM_OPTIONS+=("-install_prefix=${a#*=}");
 		MINGW_OPTIONS+=("-install_prefix=${a#*=}");
+		;;
+	-architectures=*)
+		LLVM_OPTIONS+=("-architectures=${a#*=}");
 		;;
     -cores=*)
 		LLVM_OPTIONS+=("-cores=${a#*=}");
@@ -41,15 +44,14 @@ case $a in
     -include_docs)
 		LLVM_OPTIONS+=("-include_docs");
         ;;
-	-build_only)
-		LLVM_OPTIONS+=("-build_only");
+    *)
+        echo "Unknown argument '$a'";
+        exit 1;
         ;;
-
-	-log=*)
-		COMMON_OPTIONS+=("-log=${a#*=}");
-		;;
 	esac
 done
+
+source "./def.sh";
 
 ./init_repositories.sh "${COMMON_OPTIONS[@]}" "${INIT_OPTIONS[@]}";
 

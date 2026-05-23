@@ -1,13 +1,29 @@
+# parse target
+if [ ! -v "TARGET" ]
+then
+    echo "Target not specified.";
+	exit 1;
+fi
+
+SYSTEM=${TARGET%%_+([^_])};
+PLATFORM=${TARGET##+([^_])_};
+
+if [ -z "$SYSTEM" ] || [ -z "$PLATFORM" ]
+then
+	echo "Invalid target '$TARGET'.";
+	exit 1;
+fi
+
 # LLVM variables
 
-LLVM_MODULY_VERSION="${LLVM_MODULY_VERSION:-22.1.5}";
+LLVM_MODULY_VERSION="${LLVM_MODULY_VERSION:-22.1.6}";
 LLVM_TAG="${LLVM_TAG:-llvmorg-$LLVM_MODULY_VERSION}";
 LLVM_SOURCE="$(pwd)/src/llvm_${LLVM_TAG}";
 LLVM_BUILD="$(pwd)/build/llvm_${LLVM_TAG}";
 
 # MinGW variables
 
-if [ -n "${INCLUDE_MINGW:-}" ]
+if [ "$SYSTEM" = "win" ]
 then
 	MINGW_DEFAULT_TAG="v14.0.0";
     MINGW_TAG="${MINGW_TAG:-$MINGW_DEFAULT_TAG}";
@@ -29,37 +45,6 @@ install()
     cmake --install . --strip --component "$1" \
 		  --prefix "$INSTALL_BASE/$2"  >>"$LOG_FILE";
 }
-
-# platforms
-
-join()
-{
-	local out=$1;
-	local IFS=";";
-	shift;
-
-	declare -g "$out=$*"
-}
-
-if [ -v ARCHITECTURES ]
-then
-	readarray -d "," -t arch_list <<< "$ARCHITECTURES";
-	llvm_archs_list=();
-	for arch in "${arch_list[@]}"
-	do
-		case ${arch,,} in
-			x86|x64|amd64)
-				llvm_archs_list+=("X86");
-				;;
-			*)
-				llvm_archs_list+=("$arch");
-				;;
-		esac
-	done
-	join LLVM_ARCHITECTURES "${llvm_archs_list[@]}";
-else
-	LLVM_ARCHITECTURES="host";
-fi
 
 # other variables
 
