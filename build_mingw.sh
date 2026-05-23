@@ -12,7 +12,7 @@ case $a in
 		;;
 	-log=*)
 		LOG_FILE="${a#*=}";
-        ;;
+		;;
 
     -mingw=*)
         MINGW_TAG="${a#*=}";
@@ -22,7 +22,7 @@ case $a in
         ;;
     -cores=*)
         CORES="${a#*=}";
-		;;
+        ;;
     *)
         echo "Unknown argument '$a'";
         exit 1;
@@ -39,6 +39,7 @@ cd "${MINGW_BUILD}_headers";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
 	"--prefix=${INSTALL_BASE}/mingw_headers" \
+	"--target=$MINGW_PLATFORM_ARGS" \
 	--enable-idl \
 	--with-default-win32-winnt=0x601 \
 	--with-default-msvcrt=ucrt \
@@ -53,8 +54,8 @@ cd "${MINGW_BUILD}_crt";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
 	"--prefix=${INSTALL_BASE}/mingw_crt" \
-	--disable-lib32 \
-	--enable-lib64 \
+	"--target=$MINGW_TARGET" \
+	"${PLATFORM_ARGS[@]}" \
 	--with-default-msvcrt=ucrt \
 	--enable-silent-rules \
 	--enable-cfguard \
@@ -63,3 +64,11 @@ cd "${MINGW_BUILD}_crt";
 
 make install "-j$CORES" >>"$LOG_FILE";
 log_ok "MinGW crt";
+
+mkdir -p "${SYSROOT}";
+cd "${SYSROOT}";
+
+cp -r "${INSTALL_BASE}/mingw_headers/include" .;
+cp -r "${INSTALL_BASE}/mingw_crt/include" .;
+cp -r "${INSTALL_BASE}/mingw_crt/lib" .;
+log_ok "MinGW sysroot";

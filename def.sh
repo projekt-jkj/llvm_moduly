@@ -14,6 +14,15 @@ then
 	exit 1;
 fi
 
+if [ "$PLATFORM" = "x64" ]
+then
+	MINGW_PLATFORM_ARGS=(--disable-lib32 --enable-lib64);
+	MINGW_TARGET="x86_64-w64-mingw32";
+else
+	echo "Target '$TARGET' isn't supported yet.";
+	exit 1;
+fi
+
 # LLVM variables
 
 LLVM_MODULY_VERSION="${LLVM_MODULY_VERSION:-22.1.6}";
@@ -29,15 +38,16 @@ then
     MINGW_TAG="${MINGW_TAG:-$MINGW_DEFAULT_TAG}";
 	MINGW_SOURCE="$(pwd)/src/mingw_${MINGW_TAG}";
 	MINGW_BUILD="$(pwd)/build/mingw_${MINGW_TAG}";
+	SYSROOT="$(pwd)/build/mingw_${MINGW_TAG}_sysroot";
 fi
 
 # install variables
 
 if [ -v INSTALL_PREFIX ]
 then
-	INSTALL_BASE="${INSTALL_PREFIX}/install_$LLVM_MODULY_VERSION";
+	INSTALL_BASE="${INSTALL_PREFIX}/install_${TARGET}_$LLVM_MODULY_VERSION";
 else
-	INSTALL_BASE="$(pwd)/install_$LLVM_MODULY_VERSION";
+	INSTALL_BASE="$(pwd)/install_${TARGET}_$LLVM_MODULY_VERSION";
 fi
 
 install()
