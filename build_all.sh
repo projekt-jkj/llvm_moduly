@@ -55,7 +55,7 @@ source "./def.sh";
 
 ./init_repositories.sh "${COMMON_OPTIONS[@]}" "${INIT_OPTIONS[@]}";
 
-if [ -n "${INCLUDE_MINGW:-}" ]
+if [ "$SYSTEM" = "win" ]
 then
 	./build_mingw.sh "${COMMON_OPTIONS[@]}" "${MINGW_OPTIONS[@]}";
 fi

@@ -19,7 +19,7 @@ then
 	MINGW_PLATFORM_ARGS=(--disable-lib32 --enable-lib64);
 	MINGW_TARGET="x86_64-w64-mingw32";
 else
-	echo "Target '$TARGET' isn't supported yet.";
+	echo "Target '$TARGET' isn't supported.";
 	exit 1;
 fi
 
@@ -39,6 +39,13 @@ then
 	MINGW_SOURCE="$(pwd)/src/mingw_${MINGW_TAG}";
 	MINGW_BUILD="$(pwd)/build/mingw_${MINGW_TAG}";
 	SYSROOT="$(pwd)/build/mingw_${MINGW_TAG}_sysroot";
+
+	LLVM_SYSTEM_NAME="Windows";
+elif ["$SYSTEM" = "lin" ]
+then
+	LLVM_SYSTEM_NAME="Linux";
+else
+	echo "Target '$TARGET' isn't supported.";
 fi
 
 # install variables

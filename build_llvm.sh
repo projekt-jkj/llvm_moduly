@@ -3,9 +3,9 @@
 set -ue;
 
 BUILD_TYPE="release";
+ARCHITECTURES="X86";
 CORES=4;
 INCLUDE_DOCS="OFF";
-BUILD_ONLY="OFF";
 
 LLVM_TOOLS="\
 llvm-ar;llvm-cov;llvm-cxxfilt;llvm-dlltool;llvm-dwp;llvm-lib;llvm-mca;llvm-ml;llvm-nm;\
@@ -54,22 +54,21 @@ esac
 done
 
 source ./def.sh;
-source ./log.sh;
 
-if [  "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "runtime_test" ]
+if [  "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "llvm_build" ] \
+	|| [ "$BUILD_TYPE" = "runtime_test" ]
 then
-    OTHER_FLAGS=(
+    LLVM_OPTIONS=(
 		-DCMAKE_BUILD_TYPE=Release
         -DLLVM_ENABLE_ASSERTIONS=OFF
-        -DLLVM_BUILD_TESTS=OFF
         -DLLVM_INCLUDE_TESTS=OFF
-        -DLLVM_DISTRIBUTION_COMPONENTS="$CORE_COMPONENTS"
+        -DLLVM_BUILD_TESTS=OFF
 	);
     mkdir -p "$LLVM_BUILD";
     cd "$LLVM_BUILD";
-elif [ "$BUILD_TYPE" = "test" ]
+elif [ "$BUILD_TYPE" = "llvm_test" ]
 then
-    OTHER_FLAGS=(
+    LLVM_OPTIONS=(
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DLLVM_ENABLE_ASSERTIONS=ON
         -DLLVM_INCLUDE_TESTS=ON
@@ -84,21 +83,30 @@ fi
 
 if [ "$INCLUDE_DOCS" = "ON" ]
 then
-    OTHER_FLAGS+=(
+    LLVM_OPTIONS+=(
         -DLLVM_ENABLE_DOXYGEN=ON
-        -DLLVM_BUILD_DOCS=ON
+    );
+fi
+if [ -v SYSROOT ]
+then
+    LLVM_OPTIONS+=(
+		-DCMAKE_FIND_ROOT_PATH="${SYSROOT}" \
+  		-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+  		-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+  		-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY
     );
 fi
 
 log_begin "LLVM";
 
 cmake -G Ninja \
+	"-CMAKE_SYSTEM_NAME=$LLVM_SYSTEM_NAME" \
     -DLLVM_ENABLE_PROJECTS="clang;lld" \
     -DLLVM_ENABLE_BINDINGS=OFF \
-    -DLLVM_TARGETS_TO_BUILD="$LLVM_ARCHITECTURES" \
+    -DLLVM_TARGETS_TO_BUILD="$ARCHITECTURES" \
     -DLLVM_INSTALL_TOOLCHAIN_ONLY=OFF \
     -DLLVM_LINK_LLVM_DYLIB=OFF \
-    "${OTHER_FLAGS[@]}" \
+	"${LLVM_OPTIONS[@]}" \
     "${LLVM_SOURCE}/llvm" >>"$LOG_FILE";
 
 log_ok "LLVM configure";
@@ -106,7 +114,13 @@ log_ok "LLVM configure";
 cmake --build . "-j$CORES" >>"$LOG_FILE";
 log_ok "LLVM build";
 
-if [ "$BUILD_ONLY" = "ON" ]
+if [ "$INCLUDE_DOCS" = "ON" ]
+then
+    cmake --build . --target docs "-j$CORES" >>"$LOG_FILE";
+	log_ok "LLVM documentation";
+fi
+
+if [ "$BUILD_TYPE" = "llvm_build" ]
 then
 	exit 1;
 elif [ "$BUILD_TYPE" = "test" ]
@@ -116,11 +130,6 @@ then
 	log_ok "LLVM tests";
 	exit 1;
 else
-	install distribution llvm;
-
-	install libclang-headers	clang_lib;
-	install libclang			clang_lib;
-	install clang-libraries		clang_lib;
-
+	# not implemented yet
 	log_ok "LLVM install";
 fi
