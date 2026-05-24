@@ -8,7 +8,7 @@ for a in "$@"
 do
 case $a in
 	-target=*)
-		TARGET="-target=${a#*=}";
+		TARGET="${a#*=}";
 		;;
 	-log=*)
 		LOG_FILE="${a#*=}";
@@ -39,7 +39,7 @@ cd "${MINGW_BUILD}_headers";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
 	"--prefix=${INSTALL_BASE}/mingw_headers" \
-	"--target=$MINGW_PLATFORM_ARGS" \
+	"--target=$MINGW_TARGET" \
 	--enable-idl \
 	--with-default-win32-winnt=0x601 \
 	--with-default-msvcrt=ucrt \
@@ -53,14 +53,15 @@ mkdir -p "${MINGW_BUILD}_crt";
 cd "${MINGW_BUILD}_crt";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
+	"--with-sysroot=${INSTALL_BASE}/mingw_headers" \
 	"--prefix=${INSTALL_BASE}/mingw_crt" \
 	"--target=$MINGW_TARGET" \
-	"${PLATFORM_ARGS[@]}" \
+	"${MINGW_PLATFORM_ARGS[@]}" \
 	--with-default-msvcrt=ucrt \
 	--enable-silent-rules \
-	--enable-cfguard \
 	--disable-dependency-tracking \
 	>>"$LOG_FILE";
+	#--enable-cfguard \
 
 make install "-j$CORES" >>"$LOG_FILE";
 log_ok "MinGW crt";

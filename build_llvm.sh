@@ -18,7 +18,7 @@ for a in "$@"
 do
 case $a in
 	-target=*)
-		TARGET="-target=${a#*=}";
+		TARGET="${a#*=}";
 		;;
 	-log=*)
 		LOG_FILE="${a#*=}";
@@ -100,12 +100,13 @@ fi
 log_begin "LLVM";
 
 cmake -G Ninja \
-	"-CMAKE_SYSTEM_NAME=$LLVM_SYSTEM_NAME" \
+	"-DCMAKE_SYSTEM_NAME=$LLVM_SYSTEM_NAME" \
     -DLLVM_ENABLE_PROJECTS="clang;lld" \
     -DLLVM_ENABLE_BINDINGS=OFF \
     -DLLVM_TARGETS_TO_BUILD="$ARCHITECTURES" \
     -DLLVM_INSTALL_TOOLCHAIN_ONLY=OFF \
     -DLLVM_LINK_LLVM_DYLIB=OFF \
+	"-DLLVM_DEFAULT_TARGET_TRIPLE=$LLVM_TARGET" \
 	"${LLVM_OPTIONS[@]}" \
     "${LLVM_SOURCE}/llvm" >>"$LOG_FILE";
 

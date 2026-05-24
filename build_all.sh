@@ -10,8 +10,8 @@ for a in "$@"
 do
 case $a in
 	-target=*)
-		TARGET="-target=${a#*=}";
-		COMMON_OPTIONS+=("$TARGET");
+		TARGET="${a#*=}";
+		COMMON_OPTIONS+=("-target=$TARGET");
 		;;
 	-log=*)
 		COMMON_OPTIONS+=("-log=${a#*=}");

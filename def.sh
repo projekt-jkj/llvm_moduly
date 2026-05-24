@@ -1,3 +1,5 @@
+shopt -s extglob;
+
 # parse target
 if [ ! -v "TARGET" ]
 then
@@ -41,11 +43,23 @@ then
 	SYSROOT="$(pwd)/build/mingw_${MINGW_TAG}_sysroot";
 
 	LLVM_SYSTEM_NAME="Windows";
-elif ["$SYSTEM" = "lin" ]
+elif [ "$SYSTEM" = "lin" ]
 then
 	LLVM_SYSTEM_NAME="Linux";
 else
 	echo "Target '$TARGET' isn't supported.";
+    exit 1;
+fi
+
+if [ "$TARGET" = "win_x64" ]
+then
+	LLVM_TARGET="x86_64-w64-windows-gnu";
+elif [ "$TARGET" = "lin_x64" ]
+then
+	LLVM_TARGET="x86_64-unknown-windows-gnu";
+else
+	echo "Target '$TARGET' isn't supported.";
+    exit 1;
 fi
 
 # install variables
@@ -65,8 +79,8 @@ install()
 
 # other variables
 
-ROOT=$(pwd);
-LOG_FILE="${LOG_FILE:-/dev/null}";
+#ROOT=$(pwd);
+LOG_FILE="${LOG_FILE:-/dev/stdout}";
 
 log_begin()
 {
