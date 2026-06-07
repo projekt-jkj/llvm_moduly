@@ -31,6 +31,7 @@ LLVM_MODULY_VERSION="${LLVM_MODULY_VERSION:-22.1.6}";
 LLVM_TAG="${LLVM_TAG:-llvmorg-$LLVM_MODULY_VERSION}";
 LLVM_SOURCE="$(pwd)/src/llvm_${LLVM_TAG}";
 LLVM_BUILD="$(pwd)/build/llvm_${LLVM_TAG}";
+LLVM_RUNTIME_BUILD="$(pwd)/build/runtime_${LLVM_TAG}";
 
 # MinGW variables
 
@@ -40,7 +41,6 @@ then
     MINGW_TAG="${MINGW_TAG:-$MINGW_DEFAULT_TAG}";
 	MINGW_SOURCE="$(pwd)/src/mingw_${MINGW_TAG}";
 	MINGW_BUILD="$(pwd)/build/mingw_${MINGW_TAG}";
-	SYSROOT="$(pwd)/build/mingw_${MINGW_TAG}_sysroot";
 
 	LLVM_SYSTEM_NAME="Windows";
 elif [ "$SYSTEM" = "lin" ]
@@ -53,10 +53,10 @@ fi
 
 if [ "$TARGET" = "win_x64" ]
 then
-	LLVM_TARGET="x86_64-w64-windows-gnu";
+	LLVM_TARGET="x86_64-jkj-windows-gnu";
 elif [ "$TARGET" = "lin_x64" ]
 then
-	LLVM_TARGET="x86_64-unknown-windows-gnu";
+	LLVM_TARGET="x86_64-jkj-linux-gnu";
 else
 	echo "Target '$TARGET' isn't supported.";
     exit 1;
@@ -71,15 +71,39 @@ else
 	INSTALL_BASE="$(pwd)/install_${TARGET}_$LLVM_MODULY_VERSION";
 fi
 
+if [ "$SYSTEM" = "win" ]
+then
+	SYSROOT="${INSTALL_BASE}/llvm_clang";
+fi
+
+reset_dir()
+{
+	rm -rf "$1";
+	mkdir -p "$1";
+}
 install()
 {
     cmake --install . --strip --component "$1" \
-		  --prefix "$INSTALL_BASE/$2"  >>"$LOG_FILE";
+		  --prefix "$INSTALL_BASE/$2" >>"$LOG_FILE";
+}
+install_library()
+{
+	cmake --build . --target "install-$1-headers-stripped" >>"$LOG_FILE";
+	cmake --build . --target "install-$1-libraries-stripped" >>"$LOG_FILE";
+
+	reset_dir "$INSTALL_BASE/$2";
+	mv "${INSTALL_BASE}"/lib/* "$INSTALL_BASE/$2";
+}
+install_resource_headers()
+{
+	cmake --build . --target "install-$1-resource-headers" >>"$LOG_FILE";
+
+	reset_dir "$INSTALL_BASE/$2";
+	mv "${INSTALL_BASE}"/lib/* "$INSTALL_BASE/$2";
 }
 
 # other variables
 
-#ROOT=$(pwd);
 LOG_FILE="${LOG_FILE:-/dev/stdout}";
 
 log_begin()

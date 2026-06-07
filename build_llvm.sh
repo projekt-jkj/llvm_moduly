@@ -90,6 +90,15 @@ then
 	log_ok "LLVM tests";
 	exit 1;
 else
-	# not implemented yet
+	for c in "${LLVM_CLANG[@]}"
+	do
+		install "$c" llvm_clang;
+	done
+
+	reset_dir "${INSTALL_BASE}/lib";
+	install_library llvm llvm_libraries;
+	install_library clang clang_libraries;
+	install_resource_headers clang llvm_clang;
+
 	log_ok "LLVM install";
 fi

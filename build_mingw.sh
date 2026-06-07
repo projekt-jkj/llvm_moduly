@@ -3,6 +3,7 @@
 set -ue;
 
 CORES=4;
+INSTALL_PATH="llvm_clang";
 
 for a in "$@"
 do
@@ -20,6 +21,9 @@ case $a in
     -install_prefix=*)
         INSTALL_PREFIX="${a#*=}";
         ;;
+	-install_path=*)
+		INSTALL_PATH="${a#*=}";
+		;;
     -cores=*)
         CORES="${a#*=}";
         ;;
@@ -38,7 +42,7 @@ mkdir -p "${MINGW_BUILD}_headers";
 cd "${MINGW_BUILD}_headers";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
-	"--prefix=${INSTALL_BASE}/mingw_headers" \
+	"--prefix=${INSTALL_BASE}/${INSTALL_PATH}" \
 	"--target=$MINGW_TARGET" \
 	--enable-idl \
 	--with-default-win32-winnt=0x601 \
@@ -53,23 +57,14 @@ mkdir -p "${MINGW_BUILD}_crt";
 cd "${MINGW_BUILD}_crt";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
-	"--with-sysroot=${INSTALL_BASE}/mingw_headers" \
-	"--prefix=${INSTALL_BASE}/mingw_crt" \
+	"--with-sysroot=${INSTALL_BASE}/${INSTALL_PATH}" \
+	"--prefix=${INSTALL_BASE}/${INSTALL_PATH}" \
 	"--target=$MINGW_TARGET" \
 	"${MINGW_PLATFORM_ARGS[@]}" \
 	--with-default-msvcrt=ucrt \
 	--enable-silent-rules \
 	--disable-dependency-tracking \
 	>>"$LOG_FILE";
-	#--enable-cfguard \
 
 make install "-j$CORES" >>"$LOG_FILE";
 log_ok "MinGW crt";
-
-mkdir -p "${SYSROOT}";
-cd "${SYSROOT}";
-
-cp -r "${INSTALL_BASE}/mingw_headers/include" .;
-cp -r "${INSTALL_BASE}/mingw_crt/include" .;
-cp -r "${INSTALL_BASE}/mingw_crt/lib" .;
-log_ok "MinGW sysroot";
