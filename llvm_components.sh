@@ -1,0 +1,28 @@
+LLVM_CLANG=(
+	clang
+	clang-cpp
+	clang-scan-deps
+	lld
+
+	llvm-ar
+	llvm-cov
+	llvm-cxxfilt
+	llvm-dlltool
+	llvm-dwp
+	llvm-lib
+	llvm-mca
+	llvm-ml
+	llvm-nm
+	llvm-objcopy
+	llvm-objdump
+	llvm-pdbutil
+	llvm-profdata
+	llvm-profgen
+	llvm-ranlib
+	llvm-rc
+	llvm-readobj
+	llvm-size
+	llvm-strings
+	llvm-strip
+	llvm-symbolizer
+);
