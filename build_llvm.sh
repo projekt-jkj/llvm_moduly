@@ -72,7 +72,6 @@ cmake -G Ninja \
 	"${LLVM_OPTIONS[@]}" \
 	"${CLANG_OPTIONS[@]}" \
 	"${LLD_OPTIONS[@]}" \
-	"${LIBCLANG_OPTIONS[@]}" \
     "${LLVM_SOURCE}/llvm" >>"$LOG_FILE";
 
 log_ok "LLVM configure";
@@ -96,9 +95,8 @@ else
 	done
 
 	reset_dir "${INSTALL_BASE}/lib";
-	install_library llvm llvm_libraries;
-	install_library clang clang_libraries;
 	install_resource_headers clang llvm_clang;
+	rm -rf "${INSTALL_BASE:?}/lib";
 
 	log_ok "LLVM install";
 fi

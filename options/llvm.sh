@@ -20,9 +20,6 @@ CLANG_OPTIONS=(
 LLD_OPTIONS=(
 	-DLLD_VENDOR="llvm_moduly"
 );
-LIBCLANG_OPTIONS=(
-	-DLIBCLANG_BUILD_STATIC=ON
-);
 
 if [  "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "llvm_build" ] \
 	|| [ "$BUILD_TYPE" = "runtime_test" ]
@@ -43,17 +40,6 @@ then
         -DLLVM_BUILD_TESTS=ON
 		-DCLANG_INCLUDE_TESTS=ON
 	);
-fi
-
-if [ -v SYSROOT ]
-then
-    CMAKE_OPTIONS+=(
-		-DCMAKE_SYSROOT="${SYSROOT}" \
-		-DCMAKE_FIND_ROOT_PATH="${SYSROOT}" \
-  		-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
-  		-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
-  		-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY
-    );
 fi
 
 if [ "$INCLUDE_DOCS" = "ON" ]
