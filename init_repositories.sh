@@ -1,37 +1,16 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 set -ue;
 
-for a in "$@"
-do
-case $a in
-	-target=*)
-		TARGET="${a#*=}";
-		;;
-	-log=*)
-		LOG_FILE="${a#*=}";
-		;;
-
-	-llvm=*)
-		LLVM_TAG="${a#*=}";
-		;;
-	-mingw=*)
-		MINGW_TAG="${a#*=}";
-		;;
-	*)
-		echo "Unknown argument '$a'";
-		exit 1;
-		;;
-esac
-done
-
-source ./def.sh;
+source "./argument_parser.sh";
+source "./helpers.sh";
 
 clone()
 {
 	log_begin "Cloning $2";
 	if [ ! -d "$3" ]
 	then
-		git clone --config core.autocrlf=false --depth 1 -q -b "$1" "$2" "$3" >>"$LOG_FILE";
+		git clone --config core.autocrlf=false --config advice.detachedHead=false --depth 1 -q -b "$1" "$2" "$3" >>"$LOG_FILE";
 	fi
 	log_ok "Cloning $2";
 }
