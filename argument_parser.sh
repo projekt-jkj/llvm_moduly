@@ -86,13 +86,50 @@ then
 	exit 1;
 fi
 
+shopt -s extglob;
 SYSTEM=${TARGET%%_+([^_])};
 PLATFORM=${TARGET##+([^_])_};
 
+# both system and platform must be non-empty
 if [ -z "$SYSTEM" ] || [ -z "$PLATFORM" ]
 then
 	echo "Invalid target '$TARGET'.";
 	exit 1;
+fi
+
+# platform name is used to initialize MinGW options
+if [ "$PLATFORM" = "x64" ]
+then
+	MINGW_PLATFORM_ARGS=(--disable-lib32 --enable-lib64);
+	MINGW_TARGET="x86_64-w64-mingw32";
+else
+	echo "Target '$TARGET' isn't supported (unknown platform).";
+	exit 1;
+fi
+
+# system name is used to initialize CMAKE_SYSTEM_NAME option for LLVM build
+if [ "$SYSTEM" = "win" ]
+then
+	LLVM_SYSTEM_NAME="Windows";
+elif [ "$SYSTEM" = "lin" ]
+then
+	LLVM_SYSTEM_NAME="Linux";
+else
+	echo "Target '$TARGET' isn't supported (unknown system).";
+    exit 1;
+fi
+
+# full target is used to initialize default target for Clang
+# and for LLVM runtime build
+if [ "$TARGET" = "win_x64" ]
+then
+	LLVM_TARGET="x86_64-jkj-windows-gnu";
+elif [ "$TARGET" = "lin_x64" ]
+then
+	LLVM_TARGET="x86_64-jkj-linux-gnu";
+else
+	echo "Target '$TARGET' isn't supported (unknown target).";
+    exit 1;
 fi
 
 # -------------------------

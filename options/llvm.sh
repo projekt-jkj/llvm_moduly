@@ -1,8 +1,28 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034
+# shellcheck source=/dev/null
+
+ACTIVE_PROJECTS="clang;lld";
+DISTRIBUTIONS="llvm_clang";
+
+if [ "$BUILD_CLANG_TOOLS" = ON ]
+then
+	ACTIVE_PROJECTS="${ACTIVE_PROJECTS};clang-tools-extra";
+	DISTRIBUTIONS="${DISTRIBUTIONS};clang_tools";
+fi
+if [ "$BUILD_LLDB" = ON ]
+then
+	ACTIVE_PROJECTS="$ACTIVE_PROJECTS;lldb";
+	DISTRIBUTIONS="${DISTRIBUTIONS};lldb";
+fi
+
 CMAKE_OPTIONS=(
 	"-DCMAKE_SYSTEM_NAME=$LLVM_SYSTEM_NAME"
 	"-DCMAKE_INSTALL_PREFIX=${INSTALL_BASE}/lib"
 );
 LLVM_OPTIONS=(
+	"-DLLVM_ENABLE_PROJECTS=$ACTIVE_PROJECTS"
+	"-DLLVM_DISTRIBUTIONS=$DISTRIBUTIONS"
 	-DLLVM_BUILD_LLVM_DYLIB=OFF
     -DLLVM_LINK_LLVM_DYLIB=OFF
     -DLLVM_ENABLE_BINDINGS=OFF
@@ -35,7 +55,7 @@ then
 elif [ "$BUILD_TYPE" = "llvm_test" ]
 then
 	CMAKE_OPTIONS+=(-DCMAKE_BUILD_TYPE=RelWithDebInfo);
-    LLVM_OPTIONS=(
+    LLVM_OPTIONS+=(
         -DLLVM_ENABLE_ASSERTIONS=ON
         -DLLVM_INCLUDE_TESTS=ON
         -DLLVM_BUILD_TESTS=ON
@@ -43,12 +63,16 @@ then
 	);
 fi
 
-if [ "$INCLUDE_DOCS" = "ON" ]
+source "./llvm_components.sh";
+
+
+LLVM_OPTIONS+=("-DLLVM_llvm_clang_DISTRIBUTION_COMPONENTS=$( join "${LLVM_CLANG[@]}" )");
+
+if [ "$BUILD_CLANG_TOOLS" = ON ]
 then
-    LLVM_OPTIONS+=(
-		-DLLVM_INSTALL_DOXYGEN_HTML_DIR=share/doc/llvm
-        -DLLVM_ENABLE_DOXYGEN=ON
-		-DLLVM_INCLUDE_DOCS=ON
-		-DCLANG_INCLUDE_DOCS=ON
-    );
+	LLVM_OPTIONS+=("-DLLVM_clang_tools_DISTRIBUTION_COMPONENTS=$( join "${CLANG_TOOLS[@]}" )");
+fi
+if [ "$BUILD_LLDB" = ON ]
+then
+	LLVM_OPTIONS+=("-DLLVM_lldb_DISTRIBUTION_COMPONENTS=$( join "${LLDB[@]}" )");
 fi

@@ -1,6 +1,8 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034
+
 LLVM_CLANG=(
 	clang
-	clang-cpp
 	clang-scan-deps
 	lld
 
@@ -25,4 +27,12 @@ LLVM_CLANG=(
 	llvm-strings
 	llvm-strip
 	llvm-symbolizer
+);
+CLANG_TOOLS=(
+	clangd
+	clang-format
+	clang-tidy
+);
+LLDB=(
+	lldb
 );

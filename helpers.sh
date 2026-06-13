@@ -1,6 +1,12 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
+join()
+{
+  local IFS=";";
+  echo "$*";
+}
+
 # ---------------------
 #    logging helpers
 # ---------------------
