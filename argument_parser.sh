@@ -14,7 +14,6 @@ CORES=$(nproc);
 INSTALL_PREFIX=$(pwd);
 
 BUILD_TYPE=release;
-INCLUDE_DOCS=OFF;
 
 ARCHITECTURES="all";
 BUILD_CLANG_TOOLS=OFF;
@@ -51,9 +50,6 @@ case $a in
 	-build_type=*)
         BUILD_TYPE="${a#*=}";
 		;;
-    -include_docs)
-		INCLUDE_DOCS=ON;
-        ;;
 
 # build_llvm options
 	-architectures=*)

@@ -25,7 +25,7 @@ install()
 	reset_dir "$INSTALL_BASE/tmp";
 	ninja "install-$1-distribution-stripped"  "-j$CORES" >>"$LOG_FILE";
 	mkdir -p "$INSTALL_BASE/$1";
-	mv "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$1";
+	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$1";
 }
 
 # ---------------------
