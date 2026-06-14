@@ -1,48 +1,23 @@
 #!/bin/bash
-
+# shellcheck source=/dev/null
 set -ue;
 
 CORES=4;
 INSTALL_PATH="llvm_clang";
 
-for a in "$@"
-do
-case $a in
-	-target=*)
-		TARGET="${a#*=}";
-		;;
-	-log=*)
-		LOG_FILE="${a#*=}";
-		;;
+source "./argument_parser.sh";
+source "./helpers.sh";
 
-    -mingw=*)
-        MINGW_TAG="${a#*=}";
-        ;;
-    -install_prefix=*)
-        INSTALL_PREFIX="${a#*=}";
-        ;;
-	-install_path=*)
-		INSTALL_PATH="${a#*=}";
-		;;
-    -cores=*)
-        CORES="${a#*=}";
-        ;;
-    *)
-        echo "Unknown argument '$a'";
-        exit 1;
-        ;;
-esac
-done
-
-source ./def.sh;
+MINGW_INSTALL_DIR="${INSTALL_BASE}/${INSTALL_PATH}";
 
 log_begin "MinGW";
 
-mkdir -p "${MINGW_BUILD}_headers";
-cd "${MINGW_BUILD}_headers";
+MINGW_HEADERS_DIR="${BUILD_BASE}/mingw_headers_${MINGW_TAG}";
+mkdir -p "${MINGW_HEADERS_DIR}";
+cd "${MINGW_HEADERS_DIR}";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
-	"--prefix=${INSTALL_BASE}/${INSTALL_PATH}" \
+	"--prefix=${MINGW_INSTALL_DIR}" \
 	"--target=$MINGW_TARGET" \
 	--enable-idl \
 	--with-default-win32-winnt=0x601 \
@@ -53,12 +28,13 @@ cd "${MINGW_BUILD}_headers";
 make install >>"$LOG_FILE";
 log_ok "MinGW headers";
 
-mkdir -p "${MINGW_BUILD}_crt";
-cd "${MINGW_BUILD}_crt";
+MINGW_BUILD_DIR="${BUILD_BASE}/mingw_crt_${MINGW_TAG}";
+mkdir -p "${MINGW_BUILD_DIR}";
+cd "${MINGW_BUILD_DIR}";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
-	"--with-sysroot=${INSTALL_BASE}/${INSTALL_PATH}" \
-	"--prefix=${INSTALL_BASE}/${INSTALL_PATH}" \
+	"--with-sysroot=${MINGW_INSTALL_DIR}" \
+	"--prefix=${MINGW_INSTALL_DIR}" \
 	"--target=$MINGW_TARGET" \
 	"${MINGW_PLATFORM_ARGS[@]}" \
 	--with-default-msvcrt=ucrt \

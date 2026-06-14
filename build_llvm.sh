@@ -6,21 +6,8 @@ source "./argument_parser.sh";
 source "./helpers.sh";
 source "./options/llvm.sh";
 
-if [ "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "llvm_build" ] \
-	|| [ "$BUILD_TYPE" = "runtime_test" ]
-then
-	LLVM_BUILD="$BUILD_BASE/llvm_${LLVM_TAG}";
-    mkdir -p "$LLVM_BUILD";
-    cd "$LLVM_BUILD";
-elif [ "$BUILD_TYPE" = "llvm_test" ]
-then
-	LLVM_BUILD="$BUILD_BASE/llvm_test_${LLVM_TAG}";
-    mkdir -p "${LLVM_BUILD}";
-    cd "${LLVM_BUILD}";
-else
-    echo "Unknown build type.";
-    exit 1;
-fi
+mkdir -p "$LLVM_BUILD_DIR";
+cd "$LLVM_BUILD_DIR";
 
 log_begin "LLVM";
 

@@ -52,6 +52,8 @@ then
         -DLLVM_BUILD_TESTS=OFF
 		-DCLANG_INCLUDE_TESTS=OFF
 	);
+
+	LLVM_BUILD_DIR="${BUILD_BASE}/llvm_${LLVM_TAG}";
 elif [ "$BUILD_TYPE" = "llvm_test" ]
 then
 	CMAKE_OPTIONS+=(-DCMAKE_BUILD_TYPE=RelWithDebInfo);
@@ -61,6 +63,10 @@ then
         -DLLVM_BUILD_TESTS=ON
 		-DCLANG_INCLUDE_TESTS=ON
 	);
+	LLVM_BUILD_DIR="${BUILD_BASE}_test/llvm_${LLVM_TAG}";
+else
+    echo "Unknown build type.";
+    exit 1;
 fi
 
 source "./llvm_components.sh";
