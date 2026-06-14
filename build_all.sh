@@ -2,21 +2,12 @@
 # shellcheck source=/dev/null
 set -ue;
 
-COMMON_OPTIONS=();
-INIT_OPTIONS=();
-LLVM_OPTIONS=();
-MINGW_OPTIONS=();
+source "argument_parser.sh";
 
-for a in "$@"
-do
-case $a in
-	-target=*)
-		TARGET="${a#*=}";
-        ;;
-	esac
-done
-
-source "./def.sh";
+if [ "$BUILD_TYPE" = release ]
+then
+	rm -rf "$INSTALL_BASE";
+fi
 
 ./init_repositories.sh "$@";
 ./build_llvm.sh "$@";

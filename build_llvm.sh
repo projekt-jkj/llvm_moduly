@@ -33,8 +33,11 @@ cmake -G Ninja \
 
 log_ok "LLVM configure";
 
-cmake --build . "-j$CORES" >>"$LOG_FILE";
-log_ok "LLVM build";
+for dist in "${DISTRIBUTIONS[@]}"
+do
+	build "$dist";
+	log_ok "LLVM build $dist";
+done
 
 if [ "$BUILD_TYPE" = "llvm_build" ]
 then
@@ -46,14 +49,10 @@ then
 	log_ok "LLVM tests";
 	exit 1;
 else
-	for c in "${LLVM_CLANG[@]}"
+	for dist in "${DISTRIBUTIONS[@]}"
 	do
-		install "$c" llvm_clang;
+		install "$dist";
 	done
-
-	reset_dir "${INSTALL_BASE}/lib";
-	install_resource_headers clang llvm_clang;
-	rm -rf "${INSTALL_BASE:?}/lib";
 
 	log_ok "LLVM install";
 fi

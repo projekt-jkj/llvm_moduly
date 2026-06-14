@@ -27,6 +27,8 @@ LLVM_CLANG=(
 	llvm-strings
 	llvm-strip
 	llvm-symbolizer
+
+	clang-resource-headers
 );
 CLANG_TOOLS=(
 	clangd
