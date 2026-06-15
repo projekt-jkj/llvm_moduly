@@ -33,10 +33,27 @@ build_distribution()
 {
 	ninja "$1-distribution"  "-j$CORES" >>"$LOG_FILE";
 }
+
+install()
+{
+	where="$1";
+	shift;
+
+	targets=();
+	for t in "$@"
+	do
+		targets+=("install-$t-stripped");
+	done
+
+	reset_dir "$INSTALL_BASE/tmp";
+	ninja "${targets[@]}" "-j$CORES" >>"$LOG_FILE";
+	mkdir -p "$INSTALL_BASE/$where";
+	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$where";
+}
 install_distribution()
 {
 	reset_dir "$INSTALL_BASE/tmp";
-	ninja "install-$1-distribution-stripped"  "-j$CORES" >>"$LOG_FILE";
+	ninja "install-$1-distribution-stripped" "-j$CORES" >>"$LOG_FILE";
 	mkdir -p "$INSTALL_BASE/$1";
 	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$1";
 }

@@ -137,3 +137,8 @@ MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 
 BUILD_BASE="$(pwd)/build";
 INSTALL_BASE="$(pwd)/install";
+
+if [ "$SYSTEM" = "win" ]
+then
+	SYSROOT="${INSTALL_BASE}/llvm_clang";
+fi
