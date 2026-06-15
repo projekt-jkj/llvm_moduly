@@ -1,6 +1,11 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
+mkcd()
+{
+	mkdir -p "$1";
+    cd "$1" || exit 1;
+}
 join()
 {
 	local IFS=";";
@@ -18,9 +23,17 @@ reset_dir()
 
 build()
 {
+	ninja "-j$CORES" "$@" >>"$LOG_FILE";
+}
+build_all()
+{
+	ninja "-j$CORES" >>"$LOG_FILE";
+}
+build_distribution()
+{
 	ninja "$1-distribution"  "-j$CORES" >>"$LOG_FILE";
 }
-install()
+install_distribution()
 {
 	reset_dir "$INSTALL_BASE/tmp";
 	ninja "install-$1-distribution-stripped"  "-j$CORES" >>"$LOG_FILE";

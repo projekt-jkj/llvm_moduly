@@ -28,6 +28,7 @@ LLVM_CLANG=(
 	llvm-strip
 	llvm-symbolizer
 
+	bash-autocomplete
 	clang-resource-headers
 );
 CLANG_TOOLS=(
