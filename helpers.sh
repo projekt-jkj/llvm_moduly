@@ -50,6 +50,13 @@ install()
 	mkdir -p "$INSTALL_BASE/$where";
 	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$where";
 }
+install_all()
+{
+	reset_dir "$INSTALL_BASE/tmp";
+	ninja "install/strip" "-j$CORES" >>"$LOG_FILE";
+	mkdir -p "$INSTALL_BASE/$1";
+	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$1";
+}
 install_distribution()
 {
 	reset_dir "$INSTALL_BASE/tmp";
