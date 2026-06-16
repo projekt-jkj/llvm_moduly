@@ -43,7 +43,7 @@ LLD_OPTIONS=(
 );
 
 if [  "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "llvm_build" ] \
-	|| [ "$BUILD_TYPE" = "runtime_test" ]
+	|| [ "$BUILD_TYPE" = "runtime_build" ]|| [ "$BUILD_TYPE" = "runtime_test" ]
 then
 	CMAKE_OPTIONS+=(-DCMAKE_BUILD_TYPE=Release);
     LLVM_OPTIONS+=(

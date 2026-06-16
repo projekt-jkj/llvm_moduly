@@ -19,8 +19,11 @@ log_ok "LLVM builtins configure";
 build builtins;
 log_ok "LLVM builtins build";
 
-install llvm_clang builtins;
-log_ok "LLVM builtins install";
+if [ "$BUILD_TYPE" = "release" ]
+then
+	install llvm_clang builtins;
+	log_ok "LLVM builtins install";
+fi
 
 mkcd "$LLVM_RUNTIME_DIR";
 cmake -G Ninja \
@@ -36,5 +39,12 @@ log_ok "LLVM runtime configure";
 build_all;
 log_ok "LLVM runtime build";
 
-install_all llvm_clang;
-log_ok "LLVM runtime install";
+if [ "$BUILD_TYPE" = "runtime_test" ]
+then
+	build check-runtimes;
+	log_ok "LLVM runtime tests";
+elif [ "$BUILD_TYPE" = "release" ]
+then
+	install_all llvm_clang;
+	log_ok "LLVM runtime install";
+fi
