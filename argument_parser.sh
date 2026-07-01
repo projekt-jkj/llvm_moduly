@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-: "${LLVM_MODULY_VERSION:=22.1.7}";
+: "${LLVM_MODULY_VERSION:=22.1.8}";
 
 # -------------------------------------------
 #    default values for optional arguments
