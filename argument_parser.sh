@@ -61,6 +61,9 @@ case $a in
 	-lldb)
 		BUILD_LLDB=ON;
 		;;
+	-msys=*)
+		MSYS="${a#*=}";
+		;;
 
 # fail if argument is unknown
 # if the argument is known but not used,

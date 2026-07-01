@@ -46,3 +46,9 @@ do
 done
 
 log_ok "LLVM install";
+
+if [ -v "$MSYS" ]
+then
+	./copy-msys-dependencies.sh "llvm_clang" "$MSYS" >>"$LOG_FILE";
+	log_ok "LLVM MSYS dependencies";
+fi
