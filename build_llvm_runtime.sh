@@ -21,7 +21,7 @@ log_ok "LLVM builtins build";
 
 if [ "$BUILD_TYPE" = "release" ]
 then
-	install llvm_clang builtins;
+	install_resource builtins;
 	log_ok "LLVM builtins install";
 fi
 

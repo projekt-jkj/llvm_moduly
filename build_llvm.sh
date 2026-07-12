@@ -43,12 +43,15 @@ fi
 for dist in "${DISTRIBUTIONS[@]}"
 do
 	install_distribution "$dist";
+	mkdir -p "$INSTALL_BASE/$dist/licences";
+	cp -T "${LLVM_SOURCE}/LICENSE.TXT" "$INSTALL_BASE/$dist/licences/llvm.txt";
 done
 
 log_ok "LLVM install";
 
-if [ -v "$MSYS" ]
+if [ -v MSYS ]
 then
-	./copy-msys-dependencies.sh "llvm_clang" "$MSYS" >>"$LOG_FILE";
+	cd ../..
+	./copy-msys-dependencies.sh "${INSTALL_BASE}/llvm_clang" "$MSYS" >>"$LOG_FILE";
 	log_ok "LLVM MSYS dependencies";
 fi

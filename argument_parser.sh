@@ -11,7 +11,7 @@ LLVM_TAG="llvmorg-$LLVM_MODULY_VERSION";
 MINGW_TAG="v14.0.0";
 LOG_FILE="/dev/stdout";
 CORES=$(nproc);
-INSTALL_PREFIX=$(pwd);
+INSTALL_PREFIX=$(pwd)/install;
 
 BUILD_TYPE=release;
 
@@ -139,7 +139,7 @@ LLVM_SOURCE="$(pwd)/source/llvm_${LLVM_TAG}";
 MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 
 BUILD_BASE="$(pwd)/build";
-INSTALL_BASE="$(pwd)/install";
+INSTALL_BASE="${INSTALL_PREFIX}";
 
 if [ "$SYSTEM" = "win" ]
 then

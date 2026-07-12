@@ -43,4 +43,16 @@ cd "${MINGW_BUILD_DIR}";
 	>>"$LOG_FILE";
 
 make install "-j$CORES" >>"$LOG_FILE";
+
+
+cp -T \
+	"${MINGW_SOURCE}/COPYING" \
+	"$MINGW_INSTALL_DIR/licences/mingw_w64.txt";
+cp -T \
+	"${MINGW_SOURCE}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt" \
+	"$MINGW_INSTALL_DIR/licences/COPYING.MinGW-w64.txt";
+cp -T \
+	"${MINGW_SOURCE}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt" \
+	"$MINGW_INSTALL_DIR/licences/COPYING.MinGW-w64-runtime.txt";
+
 log_ok "MinGW crt";

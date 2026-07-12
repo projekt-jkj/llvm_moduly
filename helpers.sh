@@ -64,6 +64,21 @@ install_distribution()
 	mkdir -p "$INSTALL_BASE/$1";
 	cp -rf "$INSTALL_BASE"/tmp/* "$INSTALL_BASE/$1";
 }
+install_resource()
+{
+	RESOURCE_DIR=$("${INSTALL_BASE}/llvm_clang/bin/clang.exe" --print-resource-dir);
+
+	targets=();
+	for t in "$@"
+	do
+		targets+=("install-$t-stripped");
+	done
+
+	reset_dir "$INSTALL_BASE/tmp";
+	ninja "${targets[@]}" "-j$CORES" >>"$LOG_FILE";
+	mkdir -p "$RESOURCE_DIR";
+	cp -rf "$INSTALL_BASE"/tmp/* "$RESOURCE_DIR";
+}
 
 # ---------------------
 #    logging helpers

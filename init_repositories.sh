@@ -9,6 +9,7 @@ LLVM_SUBDIRECTORIES=(
 	clang
 	cmake
 	compiler-rt
+	libc
 	libcxx
 	libcxxabi
 	libunwind
