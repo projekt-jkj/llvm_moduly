@@ -2,3 +2,4 @@ source/
 build/
 build_test/
 install/
+*.exe
