@@ -66,7 +66,7 @@ install_distribution()
 }
 install_resource()
 {
-	RESOURCE_DIR=$("${INSTALL_BASE}/llvm_clang/bin/clang.exe" --print-resource-dir);
+	RESOURCE_DIR=$("${INSTALL_BASE}/llvm_clang/bin/clang${EXE}" --print-resource-dir);
 
 	targets=();
 	for t in "$@"

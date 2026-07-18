@@ -7,10 +7,10 @@ CMAKE_OPTIONS=(
 	"-DCMAKE_INSTALL_PREFIX=${INSTALL_BASE}/tmp"
 	-DCMAKE_C_COMPILER_WORKS=ON
 	-DCMAKE_CXX_COMPILER_WORKS=ON
-	"-DCMAKE_C_COMPILER=${INSTALL_BASE}/llvm_clang/bin/clang.exe"
-	"-DCMAKE_CXX_COMPILER=${INSTALL_BASE}/llvm_clang/bin/clang++.exe"
-	"-DCMAKE_AR=${INSTALL_BASE}/llvm_clang/bin/llvm-ar.exe"
-	"-DCMAKE_RANLIB=${INSTALL_BASE}/llvm_clang/bin/llvm-ranlib.exe"
+	"-DCMAKE_C_COMPILER=${INSTALL_BASE}/llvm_clang/bin/clang${EXE}"
+	"-DCMAKE_CXX_COMPILER=${INSTALL_BASE}/llvm_clang/bin/clang++${EXE}"
+	"-DCMAKE_AR=${INSTALL_BASE}/llvm_clang/bin/llvm-ar${EXE}"
+	"-DCMAKE_RANLIB=${INSTALL_BASE}/llvm_clang/bin/llvm-ranlib${EXE}"
 	"-DCMAKE_C_COMPILER_TARGET=${LLVM_TARGET}"
 );
 BUILTINS_OPTIONS=(

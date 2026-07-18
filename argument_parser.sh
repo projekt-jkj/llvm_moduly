@@ -109,9 +109,11 @@ fi
 # system name is used to initialize CMAKE_SYSTEM_NAME option for LLVM build
 if [ "$SYSTEM" = "win" ]
 then
+	EXE=".exe";
 	LLVM_SYSTEM_NAME="Windows";
 elif [ "$SYSTEM" = "lin" ]
 then
+	EXE="";
 	LLVM_SYSTEM_NAME="Linux";
 else
 	echo "Target '$TARGET' isn't supported (unknown system).";
