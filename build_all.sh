@@ -10,10 +10,7 @@ then
 fi
 
 ./init_repositories.sh "$@";
-./build_llvm.sh "$@";
 
-if [ "$SYSTEM" = "win" ]
-then
-	./build_mingw.sh "$@";
-fi
-./build_llvm_runtime.sh "$@";
+./build_llvm.sh "$@";
+./build_runtime.sh "$@";
+./build_llvm_libraries.sh "$@";
