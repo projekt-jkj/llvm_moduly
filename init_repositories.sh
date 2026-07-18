@@ -30,7 +30,6 @@ fi
 clone()
 {
 	log_begin "Cloning $2";
-	[ ! -d "$3" ] && echo "ano $2 $3" || echo "ne $2 $3";
 
 	if [ ! -d "$3" ]
 	then
@@ -41,10 +40,11 @@ clone()
 
 clone "$LLVM_TAG" "https://github.com/llvm/llvm-project.git" "$LLVM_SOURCE" "--sparse";
 
+cd "$LLVM_SOURCE";
+git sparse-checkout add "${LLVM_SUBDIRECTORIES[@]}";
+cd "-";
+
 if [ -v MINGW_TAG ]
 then
 	clone "$MINGW_TAG" "https://github.com/mingw-w64/mingw-w64.git" "$MINGW_SOURCE";
 fi
-
-cd "$LLVM_SOURCE";
-git sparse-checkout add "${LLVM_SUBDIRECTORIES[@]}";

@@ -33,7 +33,7 @@ if [ -z "$MSYS_ENV" ]; then
 fi
 
 cd $PREFIX/bin
-for i in ld.lld.exe clang-*.exe lldb.exe; do
+for i in lld.exe clang*.exe lldb.exe llvm-*.exe; do
     if [ ! -f "$i" ]; then
         continue
     fi

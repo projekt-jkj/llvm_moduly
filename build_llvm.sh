@@ -52,6 +52,11 @@ log_ok "LLVM install";
 if [ -v MSYS ]
 then
 	cd ../..
-	./copy-msys-dependencies.sh "${INSTALL_BASE}/llvm_clang" "$MSYS" >>"$LOG_FILE";
+
+	for dist in "${DISTRIBUTIONS[@]}"
+	do
+		./copy-msys-dependencies.sh "${INSTALL_BASE}/${dist}" "$MSYS" >>"$LOG_FILE";
+	done
+
 	log_ok "LLVM MSYS dependencies";
 fi
