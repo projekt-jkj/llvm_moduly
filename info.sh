@@ -7,6 +7,8 @@
 set -ue
 
 TEST_PATH="$(pwd)/tests";
+STD_MODULE_PATH="$(pwd)/install/llvm_clang/share/libc++/v1/std.cppm";
+
 C_EXE="$TEST_PATH/c.exe";
 CPP_EXE="$TEST_PATH/cpp.exe";
 FILESYSTEM_EXE="$TEST_PATH/filesystem.exe";
@@ -91,5 +93,15 @@ echo ""
 
 ./clang++ -std=c++23 "$TEST_PATH/exceptions.cpp" -o "$EXCEPTIONS_EXE";
 "$EXCEPTIONS_EXE";
+
+echo ""
+echo "==========================="
+echo "     import std check      "
+echo "==========================="
+echo ""
+
+clang++ -std=c++23 -x c++-module "$STD_MODULE_PATH" --precompile -o "$TEST_PATH/std.pcm";
+clang++ -std=c++23 "$TEST_PATH/std.cpp" "-fprebuilt-module-path=$TEST_PATH" "$TEST_PATH/std.pcm" -o "$STD_EXE";
+"$STD_EXE";
 
 echo ""
