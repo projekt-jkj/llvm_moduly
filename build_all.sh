@@ -6,7 +6,7 @@ source "argument_parser.sh";
 
 if [ "$BUILD_TYPE" = release ]
 then
-	rm -rf "$INSTALL_BASE";
+	rm -rf "$INSTALL_PREFIX";
 fi
 
 ./init_repositories.sh "$@";

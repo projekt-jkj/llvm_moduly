@@ -29,7 +29,6 @@ LLVM_CLANG=(
 	llvm-symbolizer
 
 	bash-autocomplete
-	clang-resource-headers
 );
 CLANG_TOOLS=(
 	clangd

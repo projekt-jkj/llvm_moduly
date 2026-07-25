@@ -140,10 +140,12 @@ fi
 LLVM_SOURCE="$(pwd)/source/llvm_${LLVM_TAG}";
 MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 
-BUILD_BASE="$(pwd)/build";
-INSTALL_BASE="${INSTALL_PREFIX}";
+BUILD_BASE="$(pwd)/build/${TARGET}";
+INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";
+INSTALL_RUNTIME_BASE="${INSTALL_PREFIX}/runtime.${TARGET}";
+INSTALL_TMP_PATH="${INSTALL_PREFIX}/tmp";
 
 if [ "$SYSTEM" = "win" ]
 then
-	SYSROOT="${INSTALL_BASE}/llvm_clang";
+	SYSROOT="${INSTALL_RUNTIME_BASE}/sysroot";
 fi

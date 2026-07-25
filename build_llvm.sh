@@ -43,19 +43,21 @@ fi
 for dist in "${DISTRIBUTIONS[@]}"
 do
 	install_distribution "$dist";
-	mkdir -p "$INSTALL_BASE/$dist/licences";
-	cp -T "${LLVM_SOURCE}/LICENSE.TXT" "$INSTALL_BASE/$dist/licences/llvm.txt";
+	mkdir -p "$INSTALL_TOOLS_BASE/$dist/licences";
+	cp -T "${LLVM_SOURCE}/LICENSE.TXT" "$INSTALL_TOOLS_BASE/$dist/licences/llvm.txt";
 done
+
+rm -rf "$INSTALL_TMP_PATH";
 
 log_ok "LLVM install";
 
 if [ -v MSYS ]
 then
-	cd ../..
+	cd ../../..
 
 	for dist in "${DISTRIBUTIONS[@]}"
 	do
-		./copy-msys-dependencies.sh "${INSTALL_BASE}/${dist}" "$MSYS" >>"$LOG_FILE";
+		./copy-msys-dependencies.sh "${INSTALL_TOOLS_BASE}/${dist}" "$MSYS" >>"$LOG_FILE";
 	done
 
 	log_ok "LLVM MSYS dependencies";
