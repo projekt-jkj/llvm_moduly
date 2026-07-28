@@ -143,7 +143,6 @@ MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 BUILD_BASE="$(pwd)/build/${TARGET}";
 INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";
 INSTALL_RUNTIME_BASE="${INSTALL_PREFIX}/runtime.${TARGET}";
-INSTALL_TMP_PATH="${INSTALL_PREFIX}/tmp";
 
 if [ "$SYSTEM" = "win" ]
 then

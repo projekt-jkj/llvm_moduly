@@ -9,14 +9,23 @@ source "./options/llvm.sh";
 log_begin "LLVM";
 mkcd "$LLVM_BUILD_DIR";
 
+# -------------------
+#    configuration
+# -------------------
+
 cmake -G Ninja \
 	"${CMAKE_OPTIONS[@]}" \
 	"${LLVM_OPTIONS[@]}" \
 	"${CLANG_OPTIONS[@]}" \
 	"${LLD_OPTIONS[@]}" \
-    "${LLVM_SOURCE}/llvm" >>"$LOG_FILE";
+    "${LLVM_SOURCE}/llvm" \
+>>"$LOG_FILE";
 
 log_ok "LLVM configure";
+
+# -----------
+#    build
+# -----------
 
 if [ "$BUILD_TYPE" = "llvm_test" ]
 then
@@ -40,14 +49,14 @@ then
 	exit 1;
 fi
 
+# -----------------
+#    instalation
+# -----------------
+
 for dist in "${DISTRIBUTIONS[@]}"
 do
 	install_distribution "$dist";
-	mkdir -p "$INSTALL_TOOLS_BASE/$dist/licences";
-	cp -T "${LLVM_SOURCE}/LICENSE.TXT" "$INSTALL_TOOLS_BASE/$dist/licences/llvm.txt";
 done
-
-rm -rf "$INSTALL_TMP_PATH";
 
 log_ok "LLVM install";
 

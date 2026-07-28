@@ -57,12 +57,27 @@ install_all()
 	mkdir -p "$INSTALL_TOOLS_BASE/$1";
 	cp -rf "$INSTALL_TMP_PATH"/* "$INSTALL_TOOLS_BASE/$1";
 }
+
+#shellcheck disable=SC1087
+#shellcheck disable=SC2154
 install_distribution()
 {
-	reset_dir "$INSTALL_TMP_PATH";
-	ninja "install-$1-distribution-stripped" "-j$CORES" >>"$LOG_FILE";
-	mkdir -p "$INSTALL_TOOLS_BASE/$1";
-	cp -rf "$INSTALL_TMP_PATH"/* "$INSTALL_TOOLS_BASE/$1";
+	local dist="$1";
+	local dist_install_path="$INSTALL_TOOLS_BASE/$dist"
+
+	eval "local components=(\"\${${dist@U}[@]}\")";
+
+	for c in "${components[@]}"
+	do
+		cmake --install . \
+			--prefix "$dist_install_path" \
+			--strip \
+			--component "$c" \
+		>>"$LOG_FILE";
+	done
+
+	mkdir -p "$dist_install_path/licences";
+	cp -T "${LLVM_SOURCE}/LICENSE.TXT" "$dist_install_path/licences/llvm.txt";
 }
 
 # ---------------------
