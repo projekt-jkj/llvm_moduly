@@ -7,5 +7,9 @@ source "argument_parser.sh";
 if [ "$SYSTEM" = "win" ]
 then
 	./build_mingw.sh "$@";
+elif [ "$SYSTEM" = "lin" ]
+then
+	./build_musl.sh "$@";
 fi
+
 ./build_llvm_runtime.sh "$@";

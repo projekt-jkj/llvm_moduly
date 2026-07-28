@@ -7,8 +7,10 @@
 #    default values for optional arguments
 # -------------------------------------------
 
-LLVM_TAG="llvmorg-$LLVM_MODULY_VERSION";
+LLVM_TAG="llvmorg-22.1.8";
 MINGW_TAG="v14.0.0";
+MUSL_TAG="v1.2.6";
+
 LOG_FILE="/dev/stdout";
 CORES=$(nproc);
 INSTALL_PREFIX=$(pwd)/install;
@@ -33,6 +35,10 @@ case $a in
 	-mingw=*)
 		MINGW_TAG="${a#*=}";
 		;;
+	-musl=*)
+		MUSL_TAG="${a#*=}";
+		;;
+
 	-target=*)
 		TARGET="${a#*=}";
 		;;
@@ -127,7 +133,7 @@ then
 	LLVM_TARGET="x86_64-jkj-windows-gnu";
 elif [ "$TARGET" = "lin_x64" ]
 then
-	LLVM_TARGET="x86_64-jkj-linux-gnu";
+	LLVM_TARGET="x86_64-jkj-linux-musl";
 else
 	echo "Target '$TARGET' isn't supported (unknown target).";
     exit 1;
@@ -139,6 +145,7 @@ fi
 
 LLVM_SOURCE="$(pwd)/source/llvm_${LLVM_TAG}";
 MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
+MUSL_SOURCE="$(pwd)/source/musl_${MUSL_TAG}";
 
 BUILD_BASE="$(pwd)/build/${TARGET}";
 INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";

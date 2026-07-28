@@ -42,9 +42,12 @@ clone "$LLVM_TAG" "https://github.com/llvm/llvm-project.git" "$LLVM_SOURCE" "--s
 
 cd "$LLVM_SOURCE";
 git sparse-checkout add "${LLVM_SUBDIRECTORIES[@]}";
-cd "-";
+cd "-" >/dev/null;
 
-if [ -v MINGW_TAG ]
+if [ "$SYSTEM" = "win" ]
 then
 	clone "$MINGW_TAG" "https://github.com/mingw-w64/mingw-w64.git" "$MINGW_SOURCE";
+elif [ "$SYSTEM" = "lin" ]
+then
+	clone "$MUSL_TAG" "https://git.musl-libc.org/git/musl" "$MUSL_SOURCE";
 fi
