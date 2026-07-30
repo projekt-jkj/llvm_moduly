@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-: "${LLVM_MODULY_VERSION:=22.1.8}";
+: "${LLVM_MODULY_VERSION:=Argon preview}";
 
 # -------------------------------------------
 #    default values for optional arguments
@@ -151,7 +151,7 @@ BUILD_BASE="$(pwd)/build/${TARGET}";
 INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";
 INSTALL_RUNTIME_BASE="${INSTALL_PREFIX}/runtime.${TARGET}";
 
-if [ "$SYSTEM" = "win" ]
-then
-	SYSROOT="${INSTALL_RUNTIME_BASE}/sysroot";
-fi
+CLANG="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang${EXE}";
+CLANG_PP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang++${EXE}";
+RESOURCE_DIR="${INSTALL_RUNTIME_BASE}/resource";
+SYSROOT_DIR="${INSTALL_RUNTIME_BASE}/sysroot";
