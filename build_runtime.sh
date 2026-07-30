@@ -4,6 +4,8 @@ set -ue;
 
 source "argument_parser.sh";
 
+./install_resource_headers.sh "$@";
+
 if [ "$SYSTEM" = "win" ]
 then
 	./build_mingw.sh "$@";

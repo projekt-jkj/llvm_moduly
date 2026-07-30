@@ -47,8 +47,6 @@ install()
 
 	reset_dir "$INSTALL_TMP_PATH";
 	ninja "${targets[@]}" "-j$CORES" >>"$LOG_FILE";
-	mkdir -p "$INSTALL_TOOLS_BASE/$where";
-	cp -rf "$INSTALL_TMP_PATH"/* "$INSTALL_TOOLS_BASE/$where";
 }
 install_all()
 {
