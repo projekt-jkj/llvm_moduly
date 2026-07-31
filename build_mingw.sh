@@ -3,12 +3,15 @@
 set -ue;
 
 CORES=4;
-INSTALL_PATH="llvm_clang";
 
 source "./argument_parser.sh";
+source "./options/mingw.sh";
 source "./helpers.sh";
 
-MINGW_INSTALL_DIR="${INSTALL_BASE}/${INSTALL_PATH}";
+export CC="$CLANG";
+export CFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
+export CXX="$CLANG_PP";
+export CXXFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
 
 log_begin "MinGW";
 
@@ -17,13 +20,9 @@ mkdir -p "${MINGW_HEADERS_DIR}";
 cd "${MINGW_HEADERS_DIR}";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
-	"--prefix=${MINGW_INSTALL_DIR}" \
-	"--target=$MINGW_TARGET" \
-	--enable-idl \
-	--with-default-win32-winnt=0x601 \
-	--with-default-msvcrt=ucrt \
-	INSTALL=install -C \
-	>>"$LOG_FILE";
+	"${MINGW_COMMON_OPTIONS[@]}" \
+	"${MINGW_HEADERS_OPTIONS[@]}" \
+>>"$LOG_FILE";
 
 make install >>"$LOG_FILE";
 log_ok "MinGW headers";
@@ -33,26 +32,22 @@ mkdir -p "${MINGW_BUILD_DIR}";
 cd "${MINGW_BUILD_DIR}";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
-	"--with-sysroot=${MINGW_INSTALL_DIR}" \
-	"--prefix=${MINGW_INSTALL_DIR}" \
-	"--target=$MINGW_TARGET" \
-	"${MINGW_PLATFORM_ARGS[@]}" \
-	--with-default-msvcrt=ucrt \
-	--enable-silent-rules \
-	--disable-dependency-tracking \
-	>>"$LOG_FILE";
+	"${MINGW_COMMON_OPTIONS[@]}" \
+	"${MINGW_CRT_OPTIONS[@]}" \
+>>"$LOG_FILE";
 
 make install "-j$CORES" >>"$LOG_FILE";
 
+mkdir -p "$INSTALL_RUNTIME_BASE/licences";
 
 cp -T \
 	"${MINGW_SOURCE}/COPYING" \
-	"$MINGW_INSTALL_DIR/licences/mingw_w64.txt";
+	"$INSTALL_RUNTIME_BASE/licences/mingw_w64_root.txt";
 cp -T \
 	"${MINGW_SOURCE}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt" \
-	"$MINGW_INSTALL_DIR/licences/COPYING.MinGW-w64.txt";
+	"$INSTALL_RUNTIME_BASE/licences/mingw_w64.txt";
 cp -T \
 	"${MINGW_SOURCE}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt" \
-	"$MINGW_INSTALL_DIR/licences/COPYING.MinGW-w64-runtime.txt";
+	"$INSTALL_RUNTIME_BASE/licences/mingw_w64_runtime.txt";
 
 log_ok "MinGW crt";
