@@ -102,11 +102,12 @@ then
 	exit 1;
 fi
 
-# platform name is used to initialize MinGW options
+# platform name is used to initialize MinGW and Musl options
 if [ "$PLATFORM" = "x64" ]
 then
 	MINGW_PLATFORM_ARGS=(--disable-lib32 --enable-lib64);
 	MINGW_TARGET="x86_64-w64-mingw32";
+	MUSL_TARGET="x86_64-unknown-linux";
 else
 	echo "Target '$TARGET' isn't supported (unknown platform).";
 	exit 1;
