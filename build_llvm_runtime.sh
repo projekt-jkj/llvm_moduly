@@ -7,44 +7,43 @@ source "./helpers.sh";
 source "./options/llvm_runtime.sh";
 
 log_begin "LLVM runtime";
-mkcd "$LLVM_BUILTINS_DIR";
 
-cmake -G Ninja \
-	"${CMAKE_OPTIONS[@]}" \
-	"${BUILTINS_OPTIONS[@]}" \
-	"${LLVM_SOURCE}/compiler-rt/lib/builtins" >>"$LOG_FILE";
-
-log_ok "LLVM builtins configure";
-
-build builtins;
-log_ok "LLVM builtins build";
-
-if [ "$BUILD_TYPE" = "release" ]
-then
-	install_resource builtins;
-	log_ok "LLVM builtins install";
-fi
+# -------------------
+#    configuration
+# -------------------
 
 mkcd "$LLVM_RUNTIME_DIR";
 cmake -G Ninja \
-	"-DLLVM_ENABLE_RUNTIMES=libunwind;libcxxabi;libcxx" \
+	"-DLLVM_ENABLE_RUNTIMES=libunwind;libcxxabi;libcxx;compiler-rt" \
 	"${CMAKE_OPTIONS[@]}" \
+	"${COMPILER_RT_OPTIONS[@]}" \
 	"${LIBUNWIND_OPTIONS[@]}" \
 	"${LIBCXX_ABI_OPTIONS[@]}" \
 	"${LIBCXX_OPTIONS[@]}" \
-	"${LLVM_SOURCE}/runtimes" >>"$LOG_FILE";
+	"${LLVM_SOURCE}/runtimes" \
+>>"$LOG_FILE";
 
 log_ok "LLVM runtime configure";
 
-build_all;
-log_ok "LLVM runtime build";
+# ----------------------------
+#    build and installation
+# ----------------------------
+
+build builtins cxx cxxabi unwind;
+install_ninja builtins;
+install "$SYSROOT_DIR" cxx cxx-headers cxx-modules cxxabi cxxabi-headers unwind unwind-headers;
+
+build compiler-rt;
+install compiler-rt;
+
+mkdir -p "${INSTALL_RUNTIME_BASE}/licences";
+cp -T "${LLVM_SOURCE}/libcxx/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++.txt";
+cp -T "${LLVM_SOURCE}/libcxxabi/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++abi.txt";
+cp -T "${LLVM_SOURCE}/libunwind/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libunwind.txt";
+cp -T "${LLVM_SOURCE}/compiler-rt/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/compiler-rt.txt";
 
 if [ "$BUILD_TYPE" = "runtime_test" ]
 then
 	build check-runtimes;
 	log_ok "LLVM runtime tests";
-elif [ "$BUILD_TYPE" = "release" ]
-then
-	install_all llvm_clang;
-	log_ok "LLVM runtime install";
 fi

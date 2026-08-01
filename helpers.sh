@@ -16,6 +16,15 @@ reset_dir()
 	rm -rf "$1";
 	mkdir -p "$1";
 }
+path_conversion()
+{
+	case "$(uname -s)" in
+		MSYS*|MINGW*)
+			cygpath -w "$1" ;;
+		*)
+			echo "$1" ;;
+	esac
+}
 
 # -------------------
 #    ninja helpers
@@ -39,21 +48,24 @@ install()
 	where="$1";
 	shift;
 
+	for c in "$@"
+	do
+		cmake --install . \
+			--prefix "$where" \
+			--strip \
+			--component "$c" \
+		>>"$LOG_FILE";
+	done
+}
+install_ninja()
+{
 	targets=();
 	for t in "$@"
 	do
 		targets+=("install-$t-stripped");
 	done
 
-	reset_dir "$INSTALL_TMP_PATH";
-	ninja "${targets[@]}" "-j$CORES" >>"$LOG_FILE";
-}
-install_all()
-{
-	reset_dir "$INSTALL_TMP_PATH";
-	ninja "install/strip" "-j$CORES" >>"$LOG_FILE";
-	mkdir -p "$INSTALL_TOOLS_BASE/$1";
-	cp -rf "$INSTALL_TMP_PATH"/* "$INSTALL_TOOLS_BASE/$1";
+	ninja "${targets[@]}" >>"$LOG_FILE";
 }
 
 #shellcheck disable=SC1087
