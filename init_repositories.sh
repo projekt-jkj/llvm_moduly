@@ -27,22 +27,45 @@ then
 	LLVM_SUBDIRECTORIES+=(lldb);
 fi
 
+CLONE_ARGS=(--config core.autocrlf=false --config advice.detachedHead=false --depth 1 -q)
 clone()
 {
-	log_begin "Cloning $2";
+	local tag="$1";
+	local url="$2";
+	local path="$3";
 
-	if [ ! -d "$3" ]
+	if [ ! -d "$path" ]
 	then
-		git clone --config core.autocrlf=false --config advice.detachedHead=false --depth 1 -q -b "$@" >>"$LOG_FILE";
+		log_begin "Cloning $url";
+		git clone "${CLONE_ARGS[@]}" -b "$tag" "$url" "$path" >>"$LOG_FILE";
+		log_end "Cloning $url";
 	fi
-	log_ok "Cloning $2";
+}
+clone_sparse()
+{
+	local tag="$1";
+	local url="$2";
+	local path="$3";
+
+	shift 3;
+
+	log_begin "Cloning $url";
+
+	if [ ! -d "$path" ]
+	then
+		git clone "${CLONE_ARGS[@]}" --sparse -b "$tag" "$url" "$path" >>"$LOG_FILE";
+	fi
+
+	cd "$path";
+	git sparse-checkout add "$@";
+	cd "-" >/dev/null;
+	
+	log_end "Cloning $url";
 }
 
-clone "$LLVM_TAG" "https://github.com/llvm/llvm-project.git" "$LLVM_SOURCE" "--sparse";
+log_header "Initialize repositories"
 
-cd "$LLVM_SOURCE";
-git sparse-checkout add "${LLVM_SUBDIRECTORIES[@]}";
-cd "-" >/dev/null;
+clone_sparse "$LLVM_TAG" "https://github.com/llvm/llvm-project.git" "$LLVM_SOURCE" "${LLVM_SUBDIRECTORIES[@]}";
 
 if [ "$SYSTEM" = "win" ]
 then
