@@ -16,6 +16,7 @@ log_begin "LLVM runtime configure";
 
 mkcd "$LLVM_RUNTIME_DIR";
 cmake -G Ninja \
+	-Wno-dev \
 	"-DLLVM_ENABLE_RUNTIMES=libunwind;libcxxabi;libcxx;compiler-rt" \
 	"${CMAKE_OPTIONS[@]}" \
 	"${COMPILER_RT_OPTIONS[@]}" \
@@ -39,7 +40,7 @@ log_end "libc++";
 
 log_begin "compiler-rt";
 build compiler-rt;
-install compiler-rt;
+install_ninja compiler-rt;
 log_end "compiler-rt";
 
 mkdir -p "${INSTALL_RUNTIME_BASE}/licences";

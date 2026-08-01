@@ -16,6 +16,7 @@ mkcd "$LLVM_BUILD_DIR";
 log_begin "LLVM configure";
 
 cmake -G Ninja \
+	-Wno-dev \
 	"${CMAKE_OPTIONS[@]}" \
 	"${LLVM_OPTIONS[@]}" \
 	"${CLANG_OPTIONS[@]}" \

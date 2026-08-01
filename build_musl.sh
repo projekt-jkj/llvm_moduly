@@ -7,6 +7,7 @@ source "./helpers.sh";
 
 export CC="$CLANG";
 export CFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
+export CROSS_COMPILE=llvm-;
 
 log_header "Musl";
 
@@ -25,6 +26,8 @@ log_begin "Musl";
 >>"$LOG_FILE";
 
 make install "-j$CORES" >>"$LOG_FILE";
+
+mkdir -p "$INSTALL_RUNTIME_BASE/licences";
 
 cp -T \
 	"${MUSL_SOURCE}/COPYRIGHT" \
