@@ -6,11 +6,13 @@ source "./argument_parser.sh";
 source "./helpers.sh";
 source "./options/llvm_runtime.sh";
 
-log_begin "LLVM runtime";
+log_header "LLVM runtime";
 
 # -------------------
 #    configuration
 # -------------------
+
+log_begin "LLVM runtime configure";
 
 mkcd "$LLVM_RUNTIME_DIR";
 cmake -G Ninja \
@@ -23,18 +25,22 @@ cmake -G Ninja \
 	"${LLVM_SOURCE}/runtimes" \
 >>"$LOG_FILE";
 
-log_ok "LLVM runtime configure";
+log_end "LLVM runtime configure";
 
 # ----------------------------
 #    build and installation
 # ----------------------------
 
+log_begin "libc++";
 build builtins cxx cxxabi unwind;
 install_ninja builtins;
 install "$SYSROOT_DIR" cxx cxx-headers cxx-modules cxxabi cxxabi-headers unwind unwind-headers;
+log_end "libc++";
 
+log_begin "compiler-rt";
 build compiler-rt;
 install compiler-rt;
+log_end "compiler-rt";
 
 mkdir -p "${INSTALL_RUNTIME_BASE}/licences";
 cp -T "${LLVM_SOURCE}/libcxx/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++.txt";
@@ -44,6 +50,7 @@ cp -T "${LLVM_SOURCE}/compiler-rt/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences
 
 if [ "$BUILD_TYPE" = "runtime_test" ]
 then
+	log_begin "LLVM runtime tests";
 	build check-runtimes;
-	log_ok "LLVM runtime tests";
+	log_end "LLVM runtime tests";
 fi

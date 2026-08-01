@@ -13,11 +13,13 @@ export CFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
 export CXX="$CLANG_PP";
 export CXXFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
 
-log_begin "MinGW";
+log_header "MinGW";
 
 MINGW_HEADERS_DIR="${BUILD_BASE}/mingw_headers_${MINGW_TAG}";
 mkdir -p "${MINGW_HEADERS_DIR}";
 cd "${MINGW_HEADERS_DIR}";
+
+log_begin "MinGW headers";
 
 "${MINGW_SOURCE}/mingw-w64-headers/configure" \
 	"${MINGW_COMMON_OPTIONS[@]}" \
@@ -25,11 +27,13 @@ cd "${MINGW_HEADERS_DIR}";
 >>"$LOG_FILE";
 
 make install >>"$LOG_FILE";
-log_ok "MinGW headers";
+log_end "MinGW headers";
 
 MINGW_BUILD_DIR="${BUILD_BASE}/mingw_crt_${MINGW_TAG}";
 mkdir -p "${MINGW_BUILD_DIR}";
 cd "${MINGW_BUILD_DIR}";
+
+log_begin "MinGW crt";
 
 "${MINGW_SOURCE}/mingw-w64-crt/configure" \
 	"${MINGW_COMMON_OPTIONS[@]}" \
@@ -50,4 +54,4 @@ cp -T \
 	"${MINGW_SOURCE}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt" \
 	"$INSTALL_RUNTIME_BASE/licences/mingw_w64_runtime.txt";
 
-log_ok "MinGW crt";
+log_end "MinGW crt";

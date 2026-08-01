@@ -20,7 +20,7 @@ path_conversion()
 {
 	case "$(uname -s)" in
 		MSYS*|MINGW*)
-			cygpath -w "$1" ;;
+			cygpath -m "$1" ;;
 		*)
 			echo "$1" ;;
 	esac
@@ -94,11 +94,17 @@ install_distribution()
 #    logging helpers
 # ---------------------
 
+log_header()
+{
+	echo "-----------------------------------------------------"  | tee -a "$LOG_FILE";
+	echo "    [$1] $(date '+%H:%M:%S')" | tee -a "$LOG_FILE";
+	echo "-----------------------------------------------------"  | tee -a "$LOG_FILE";
+}
 log_begin()
 {
-	echo "=== [$1] $(date '+%H:%M:%S') ===" | tee -a "$LOG_FILE";
+	echo "=== [$1] BEGIN ===" | tee -a "$LOG_FILE";
 }
-log_ok()
+log_end()
 {
 	echo "=== [$1] OK ===" | tee -a "$LOG_FILE";
 }
