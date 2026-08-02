@@ -38,11 +38,6 @@ install_ninja builtins;
 install "$SYSROOT_DIR" cxx cxx-headers cxx-modules cxxabi cxxabi-headers unwind unwind-headers;
 log_end "libc++";
 
-log_begin "compiler-rt";
-build compiler-rt;
-install_ninja compiler-rt;
-log_end "compiler-rt";
-
 mkdir -p "${INSTALL_RUNTIME_BASE}/licences";
 cp -T "${LLVM_SOURCE}/libcxx/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++.txt";
 cp -T "${LLVM_SOURCE}/libcxxabi/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++abi.txt";

@@ -12,8 +12,9 @@ mkcd "$LLVM_RESOURCE_HEADERS_DIR";
 log_begin "Clang resource headers configure";
 
 cmake -G Ninja \
+	-Wno-dev \
 	"-DCMAKE_INSTALL_PREFIX=$INSTALL_RUNTIME_BASE" \
-	-DLLVM_ENABLE_PROJECTS="clang" \
+	-DLLVM_ENABLE_PROJECTS=clang \
 	-DCLANG_RESOURCE_DIR=../resource \
 	"${LLVM_SOURCE}/llvm" \
 >>"$LOG_FILE";

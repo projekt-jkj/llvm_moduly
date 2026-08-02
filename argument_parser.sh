@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-: "${LLVM_MODULY_VERSION:=Argon preview}";
+: "${LLVM_MODULY_VERSION:=preview}";
 
 # -------------------------------------------
 #    default values for optional arguments
@@ -10,6 +10,7 @@
 LLVM_TAG="llvmorg-22.1.8";
 MINGW_TAG="v14.0.0";
 MUSL_TAG="v1.2.6";
+LINUX_TAG="v7.1";
 
 LOG_FILE="/dev/stdout";
 CORES=$(nproc);
@@ -37,6 +38,9 @@ case $a in
 		;;
 	-musl=*)
 		MUSL_TAG="${a#*=}";
+		;;
+	-linux=*)
+		LINUX_TAG="${a#*=}";
 		;;
 
 	-target=*)
@@ -85,21 +89,51 @@ done
 #    target validation
 # -----------------------
 
-if [ ! -v "TARGET" ]
-then
-    echo "Target not specified.";
-	exit 1;
-fi
+detect_system()
+{
+	case "$(uname -o)" in
+		Msys)
+			echo "win"
+			;;
+		GNU/Linux)
+			echo "lin";
+			;; 
+		*)
+			uname -o;
+			;;
+	esac
+}
+detect_platform()
+{
+	case "$(uname -m)" in
+		x86_64)
+			echo "x64";
+			;;
+		*)
+			uname -m;
+			;;
+	esac
+}
 
 shopt -s extglob;
-SYSTEM=${TARGET%%_+([^_])};
-PLATFORM=${TARGET##+([^_])_};
-
-# both system and platform must be non-empty
-if [ -z "$SYSTEM" ] || [ -z "$PLATFORM" ]
+if [ -v "TARGET" ]
 then
-	echo "Invalid target '$TARGET'.";
-	exit 1;
+	SYSTEM=${TARGET%%_+([^_])};
+	PLATFORM=${TARGET##+([^_])_};
+
+	if [ -z "$SYSTEM" ] || [ -z "$PLATFORM" ]
+	then
+		echo "Invalid target '$TARGET'.";
+		exit 1;
+	fi
+
+else
+	SYSTEM=$(detect_system);
+	PLATFORM=$(detect_platform);
+	TARGET="${SYSTEM}_${PLATFORM}";
+
+    echo "Target not specified.";
+	echo "Detected: ${TARGET}.";
 fi
 
 # platform name is used to initialize MinGW and Musl options
@@ -108,6 +142,7 @@ then
 	MINGW_PLATFORM_ARGS=(--disable-lib32 --enable-lib64);
 	MINGW_TARGET="x86_64-w64-mingw32";
 	MUSL_TARGET="x86_64-unknown-linux";
+	LINUX_ARCH="x86";
 else
 	echo "Target '$TARGET' isn't supported (unknown platform).";
 	exit 1;
@@ -147,6 +182,7 @@ fi
 LLVM_SOURCE="$(pwd)/source/llvm_${LLVM_TAG}";
 MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 MUSL_SOURCE="$(pwd)/source/musl_${MUSL_TAG}";
+LINUX_SOURCE="$(pwd)/source/linux_${LINUX_TAG}";
 
 BUILD_BASE="$(pwd)/build/${TARGET}";
 INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";

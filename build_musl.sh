@@ -34,3 +34,15 @@ cp -T \
 	"$INSTALL_RUNTIME_BASE/licences/musl.txt";
 
 log_end "Musl";
+
+log_header "Linux kernel headers";
+log_begin "Linux kernel headers";
+
+make LLVM=1 \
+	"ARCH=${LINUX_ARCH}" \
+	"INSTALL_HDR_PATH=$SYSROOT_DIR" \
+	-C "${LINUX_SOURCE}" \
+	headers_install \
+>>"$LOG_FILE";
+
+log_end "Linux kernel headers";
