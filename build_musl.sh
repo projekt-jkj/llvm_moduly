@@ -45,4 +45,9 @@ make LLVM=1 \
 	headers_install \
 >>"$LOG_FILE";
 
+
+cp -T \
+	"${LINUX_SOURCE}/COPYING" \
+	"$INSTALL_RUNTIME_BASE/licences/linux.txt";
+
 log_end "Linux kernel headers";

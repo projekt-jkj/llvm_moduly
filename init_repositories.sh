@@ -18,6 +18,12 @@ LLVM_SUBDIRECTORIES=(
 	runtimes
 	third-party
 );
+LINUX_SUBDIRECTORIES=(
+	include/uapi
+	scripts
+	"arch/${LINUX_ARCH}"
+);
+
 if [ "$BUILD_CLANG_TOOLS" = "ON" ]
 then
 	LLVM_SUBDIRECTORIES+=(clang-tools-extra);
@@ -72,6 +78,6 @@ then
 	clone "$MINGW_TAG" "https://github.com/mingw-w64/mingw-w64.git" "$MINGW_SOURCE";
 elif [ "$SYSTEM" = "lin" ]
 then
-	clone_sparse "$LINUX_TAG" "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git" "$LINUX_SOURCE" "include/uapi";
+	clone_sparse "$LINUX_TAG" "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git" "$LINUX_SOURCE" "${LINUX_SUBDIRECTORIES[@]}";
 	clone "$MUSL_TAG" "https://git.musl-libc.org/git/musl" "$MUSL_SOURCE";
 fi
