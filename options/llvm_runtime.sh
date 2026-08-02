@@ -82,3 +82,8 @@ else
     echo "Unknown build type.";
     exit 1;
 fi
+
+if [ "$SYSTEM" = "lin" ]
+then
+	LIBCXX_OPTIONS+=(-DLIBCXX_HAS_MUSL_LIBC=ON);
+fi
