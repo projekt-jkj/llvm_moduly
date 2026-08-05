@@ -1,0 +1,245 @@
+┏━━━━━━━━━━━━━┓
+┃ llvm_moduly ┃
+┗━━━━━━━━━━━━━┛
+Llvm_moduly is a modular distribution of LLVM
+that aims for consistent behavior across all
+platforms. It achieves this by strictly using
+LLVM tools (clang, lld, …) and runtime libraries
+(libc++, …). Because LLVM’s implementation of
+the C standard library is incomplete, I use
+a custom MinGW CRT build for Windows or Musl
+for Linux instead.
+
+┌──────────────────────┐
+│ Repository structure │
+└──────────────────────┘
+Helper scripts:
+
+– argument_parser.sh
+  > Contains the command‑line argument parsing algorithm.
+  > Shared by all other scripts.
+  > Also defines basic variables (TARGET, PLATFORM, source paths, etc.)
+– helpers.sh
+  > Definitions of helper functions used across multiple scripts.
+– init_repozitories.sh
+  > Clones all required repositories.
+- options/llvm_components.sh
+  > Assigns programs and libraries to individual modules.
+– options/*.sh
+  > Definitions of switches for configuring the LLVM project and MinGW.
+– target/*.sh
+  > Runs `build_all.sh` with predefined command‑line arguments.
+  > Serves as both an example and documentation of what is actually supported (or will be).
+  > An optional argument allows changing the script being executed.
+– copy-msys-dependencies.sh
+  > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
+  > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
+- install.sh FROM TO TARGET COMPONENTS...
+  > Copies built modules to the place of use.
+  > FROM = path to finished modules (e.g. ./install)
+  > TO = installation location (/usr/local, /$HOME/jkj, etc.)
+  > TARGET = target used for building
+  > COMPONENTS = optional list of components to install
+  > Runtime for the given target is always installed.
+
+Build scripts:
+
+– build_all.sh
+  > Runs other scripts according to the selected configuration.
+– build_llvm.sh
+  > Builds and installs LLVM tools, Clang, and other programs.
+  > Runs tests in test configurations.
+- build_llvm_libraries.sh
+  > Builds and installs LLVM libraries.
+  > Not yet implemented.
+
+- build_runtime.sh
+  > Runs the following scripts depending on the target platform
+- install_resourse_headers.sh
+  > Installs Clang resource headers
+– build_mingw.sh
+  > Builds and installs MinGW runtime libraries
+- build_musl.sh
+  > Builds and installs Musl and Linux kernel headers.
+– build_llvm_runtime.sh
+  > Builds and installs LLVM runtime libraries (compiler‑rt, libc++, …).
+  > Runs tests in test configurations.
+
+Helper directories:
+
+– source/{project}_{tag}/
+  > Cloned source code
+– build/{target}/{project}_{tag}/
+  > Build artifacts for individual projects or components
+– install/tools.{target}/{module}/
+  > Final module containing all built tools
+  > Distributed as an independent package
+- install/runtime.{target}/
+  > All runtime libraries, headers, and licenses
+
+┌──────────────────┐
+│ Module structure │
+└──────────────────┘
+llvm_clang:
+– clang
+– lld
+– LLVM tools (llvm-ar, llvm-nm, etc.)
+
+clang_tools:
+– clangd
+– clang-format
+– clang-tidy
+
+lldb:
+– lldb
+
+runtime modules (e.g. win_x64, lin_x64)
+– compiler‑rt (builtins only)
+– libc++, libc++abi, libunwind
+– MinGW CRT (Windows only)
+- Musl (Linux only)
+(built for the corresponding platform)
+
+┌──────────────────┐
+│ Script arguments │
+└──────────────────┘
+All scripts share the same command‑line argument parser (`argument_parser.sh`).
+As a result, if a script receives an argument it does n't use,
+but another script does, it isn't considered an error.
+
+Shared arguments:
+
+-llvm={}
+    LLVM version used for downloading sources and building
+    Example: `llvmorg-22.1.8`
+-mingw={}
+    MinGW version used for downloading sources and building
+    Example: `v14.0.0`
+-musl={}
+    Musl version used for downloading sources and building
+    Example: `v1.2.6`
+-linux={}
+    Linux kernel version used for downloading sources and building
+    Example: `v7.1`
+
+-target={}
+    Target platform for which llvm_moduly is built
+    Also the default target platform for the built Clang
+    Format: ${SYSTEM}_${PLATFORM}
+    SYSTEM = operating system (supported values: win, lin)
+    PLATFORM = CPU architecture (supported values: x64)
+-log={}
+    File where script output is stored.
+    Default: `/dev/stdout`
+-cores={}
+    Number of CPU cores used for building
+    Default: output of `nproc`
+-install_prefix={}
+    Directory where built programs and libraries are copied.
+    Default: `$(pwd)/install`
+
+LLVM‑specific arguments:
+
+-build_type={}
+    Determines which parts of LLVM are built and with what optimizations
+    Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test
+-architectures={}
+    Semicolon‑separated list of architectures supported by the built LLVM
+    Example: AArch64;Mips;WebAssembly;X86;XCore
+    Special values: all (all platforms), host (platform used for building)
+    See LLVM documentation for details
+-clang_tools
+    Includes the clang_tools module in the build
+-lldb
+    Includes the lldb module in the build
+-msys={}
+    Copies dynamically linked libraries from the specified MSYS environment
+    (e.g. MINGW64 or CLANG64)
+    This allows users to run programs outside MSYS without manually resolving dependencies
+
+┌────────────┐
+│ Motivation │
+└────────────┘
+A few years ago, I developed a program using standard
+C++ modules. At that time, the ecosystem wasn't yet mature,
+making the task very difficult. The best results came from MSVC,
+but it is too tightly coupled with Visual Studio.
+Clang produced slightly worse but acceptable results.
+Development on Windows worked fine. However, when I tried to
+build the program on Linux, the build failed, even though I used
+the same compiler version.
+I later learned the issue was caused by differences between
+MSVC STL and libstdc++.
+After some research, I found that these differences can't be
+easily resolved: MSVC doesn't support Linux, GCC is unreliable
+on Windows, and Clang prefers system libraries over its own.
+Some Clang distributions don't include the LLVM runtime at all
+or can't use it.
+
+The LLVM MinGW distribution impressed me the most. It uses a
+complete LLVM runtime and MinGW CRT, making it almost perfectly
+compatible with the LLVM runtime on glibc/musl.
+However, LLVM MinGW targets something else: it is a
+multiplatform toolchain for Windows development, while I need
+a consistent multiplatform toolchain for native and cross‑platform
+development. It also lacks libclang and other LLVM libraries.
+Therefore, I decided to create my own distribution.
+My LLVM and MinGW build scripts are inspired by LLVM MinGW.
+
+┌────────────────┐
+│ Completed work │
+└────────────────┘
+The current version includes only the `llvm_clang` module.
+Scripts also support building `clang_tools` and `lldb`
+(but these haven't yet been used or tested).
+
+The `llvm_clang` module contains:
+– LLVM tools (llvm-ar, llvm-nm, …)
+– Clang
+– LLD
+– Bash autocomplete for Clang
+
+┌───────────────┐
+│ Známá omezení │
+└───────────────┘
+1)
+Linux distribution doesn't support dynamic linking.
+This is due to the neccessity to distribute ld-musl.so
+dynamic linker with the runtime. The path to this file
+must be known in the compile time, then it can't be configured.
+Because of the fact that Musl runtime isn't preinstalled
+on most Linux distributions, it would require to have root
+privilegies to install programs build with llvm_moduly,
+which is in contradiction of the goal of this project.
+
+2)
+Clang++ from the linux distribution doesn't have preset the path
+to libc++ headers. Therefore it is neccessery to run clang++
+with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
+(I reccomend to set it using CXXFLAGS or via build system)
+
+┌───────┐
+│ Plans │
+└───────┘
+– Add `clang_libraries` and `llvm_libraries`.
+– Extend runtime packages with dynamic libraries, sanitizers, and other LLVM components.
+– Support for ARM and other hardware platforms.
+- Experiments with LLVM libc.
+
+┌─────────────┐
+│ Not planned │
+└─────────────┘
+- Support for glibc or other C standard library implementations
+- Support for libstdc++, MSVC STL, or other C++ standard library implementations
+- Building tools that are not part of LLVM
+- Distributing packages built with configurations not listed in `target/`
+
+┌───────┐
+│ Links │
+└───────┘
+https://llvm.org/
+https://www.mingw-w64.org/
+https://musl.libc.org/
+https://kernel.org/
+https://www.msys2.org/
+https://github.com/mstorsjo/llvm-mingw

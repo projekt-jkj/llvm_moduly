@@ -7,7 +7,6 @@
 set -ue
 
 TEST_PATH="$(pwd)/tests";
-STD_MODULE_PATH="$(pwd)/install/llvm_clang/share/libc++/v1/std.cppm";
 
 C_EXE="$TEST_PATH/c.exe";
 CPP_EXE="$TEST_PATH/cpp.exe";
@@ -16,8 +15,9 @@ THREADS_EXE="$TEST_PATH/threads.exe";
 EXCEPTIONS_EXE="$TEST_PATH/exceptions.exe";
 STD_EXE="$TEST_PATH/std.exe";
 
-
-cd install/llvm_clang/bin
+ROOT="$1";
+CLANG_PATH="$ROOT/bin";
+STD_MODULE_PATH="$ROOT/sysroot/share/libc++/v1/std.cppm";
 
 echo ""
 echo "==========================="
@@ -25,7 +25,7 @@ echo "       c compilation       "
 echo "==========================="
 echo ""
 
-./clang -v "$TEST_PATH/main.c" -o "$C_EXE";
+"$CLANG_PATH/clang" -v "$TEST_PATH/main.c" -o "$C_EXE";
 
 echo ""
 echo "---------------------------"
@@ -49,7 +49,7 @@ echo "      cpp compilation      "
 echo "==========================="
 echo ""
 
-./clang++ -std=c++23 -v "$TEST_PATH/main.cpp" -o "$CPP_EXE";
+"$CLANG_PATH/clang++" -std=c++23 -v "$TEST_PATH/main.cpp" -o "$CPP_EXE";
 
 echo ""
 echo "---------------------------"
@@ -73,7 +73,7 @@ echo "       thread check        "
 echo "==========================="
 echo ""
 
-./clang++ -std=c++23 "$TEST_PATH/threads.cpp" -o "$THREADS_EXE";
+"$CLANG_PATH/clang++" -std=c++23 "$TEST_PATH/threads.cpp" -o "$THREADS_EXE";
 "$THREADS_EXE";
 
 echo ""
@@ -82,7 +82,7 @@ echo "     filesystem check      "
 echo "==========================="
 echo ""
 
-./clang++ -std=c++23 "$TEST_PATH/filesystem.cpp" -o "$FILESYSTEM_EXE";
+"$CLANG_PATH/clang++" -std=c++23 "$TEST_PATH/filesystem.cpp" -o "$FILESYSTEM_EXE";
 "$FILESYSTEM_EXE";
 
 echo ""
@@ -91,7 +91,7 @@ echo "     exceptions check      "
 echo "==========================="
 echo ""
 
-./clang++ -std=c++23 "$TEST_PATH/exceptions.cpp" -o "$EXCEPTIONS_EXE";
+"$CLANG_PATH/clang++" -std=c++23 "$TEST_PATH/exceptions.cpp" -o "$EXCEPTIONS_EXE";
 "$EXCEPTIONS_EXE";
 
 echo ""
@@ -100,8 +100,10 @@ echo "     import std check      "
 echo "==========================="
 echo ""
 
-clang++ -std=c++23 -x c++-module "$STD_MODULE_PATH" --precompile -o "$TEST_PATH/std.pcm";
-clang++ -std=c++23 "$TEST_PATH/std.cpp" "-fprebuilt-module-path=$TEST_PATH" "$TEST_PATH/std.pcm" -o "$STD_EXE";
+"$CLANG_PATH/clang++" -std=c++23 -x c++-module "$STD_MODULE_PATH" --precompile -o "$TEST_PATH/std.pcm";
+"$CLANG_PATH/clang++" -std=c++23 "$TEST_PATH/std.cpp" "-fprebuilt-module-path=$TEST_PATH" "$TEST_PATH/std.pcm" -o "$STD_EXE";
 "$STD_EXE";
 
-echo ""
+echo "";
+echo "info.sh ended successfully"
+echo "";
