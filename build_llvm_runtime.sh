@@ -32,9 +32,16 @@ log_end "LLVM runtime configure";
 #    build and installation
 # ----------------------------
 
+if [ "$SYSTEM" = lin ]
+then
+	compiler_rt_components=(builtins crt);
+else
+	compiler_rt_components=(builtins);
+fi
+
 log_begin "libc++";
 build builtins cxx cxxabi unwind;
-install_ninja builtins;
+install_ninja "${compiler_rt_components[@]}";
 install "$SYSROOT_DIR" cxx cxx-headers cxx-modules cxxabi cxxabi-headers unwind unwind-headers;
 log_end "libc++";
 
