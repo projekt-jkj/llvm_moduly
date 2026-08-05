@@ -31,6 +31,7 @@ Helper scripts:
   > Runs `build_all.sh` with predefined command‑line arguments.
   > Serves as both an example and documentation of what is actually supported (or will be).
   > An optional argument allows changing the script being executed.
+  > Additional arguments are passed to the executed script.
 – copy-msys-dependencies.sh
   > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
   > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
@@ -143,6 +144,10 @@ LLVM‑specific arguments:
 -build_type={}
     Determines which parts of LLVM are built and with what optimizations
     Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test
+-clang={}
+	Allows to set path to the Clang for standalone build of runtime libraries.
+	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
+
 -architectures={}
     Semicolon‑separated list of architectures supported by the built LLVM
     Example: AArch64;Mips;WebAssembly;X86;XCore

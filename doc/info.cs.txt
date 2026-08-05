@@ -31,6 +31,7 @@ Pomocné skripty:
   > Spustí `build_all.sh` s předdefinovanými argumenty příkazové řádky.
   > Slouží jako ukázka i jako dokumentace toho, co je skutečně podporováno (nebo alespoň bude).
   > Volitelný argument umožňuje změnit spuštěný skript.
+  > Případné další argumenty jsou předány spuštěnému skriptu.
 – copy-msys-dependencies.sh
   > Zkopíruje dynamické knihovny z MSYS prostředí, ve kterém bylo llvm_moduly sestaveno.
   > Převzato z repozitáře LLVM MinGW (https://github.com/mstorsjo/llvm-mingw).
@@ -143,6 +144,9 @@ Argumenty specifické pro LLVM:
 -build_type={}
 	Určuje, které části LLVM budou sestaveny a s jakými optimalizacemi
 	Platné hodnoty: realese, llvm_build, llvm_test, runtime_build, runtime_test
+-clang={}
+	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
+
 -architectures={}
 	Seznam architektur oddělených středníky, které bude sestavené LLVM podporovat
 	Např. AArch64;Mips;WebAssembly;X86;XCore

@@ -60,6 +60,9 @@ case $a in
 	-build_type=*)
         BUILD_TYPE="${a#*=}";
 		;;
+	-clang=*)
+		CLANG_PATH="${a#*=}";
+		;;
 
 # build_llvm options
 	-architectures=*)
@@ -188,7 +191,14 @@ BUILD_BASE="$(pwd)/build/${TARGET}";
 INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";
 INSTALL_RUNTIME_BASE="${INSTALL_PREFIX}/runtime.${TARGET}";
 
-CLANG="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang${EXE}";
-CLANG_PP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang++${EXE}";
+if [ -v CLANG_PATH ]
+then
+	CLANG="${CLANG_PATH}/clang${EXE}";
+	CLANG_PP="${INSTALL_TOOLS_BASE}/clang++${EXE}";
+else
+	CLANG="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang${EXE}";
+	CLANG_PP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang++${EXE}";
+fi
+
 RESOURCE_DIR="${INSTALL_RUNTIME_BASE}/resource";
 SYSROOT_DIR="${INSTALL_RUNTIME_BASE}/sysroot";
