@@ -1,16 +1,16 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-: "${LLVM_MODULY_VERSION:=preview}";
+: "${LLVM_MODULY_VERSION:=Argon}";
 
 # -------------------------------------------
 #    default values for optional arguments
 # -------------------------------------------
 
-LLVM_TAG="llvmorg-22.1.8";
+LLVM_TAG="llvmorg-23.1.0";
 MINGW_TAG="v14.0.0";
 MUSL_TAG="v1.2.6";
-LINUX_TAG="v7.1";
+LINUX_TAG="v7.2";
 
 LOG_FILE="/dev/stdout";
 CORES=$(nproc);
