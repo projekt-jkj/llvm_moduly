@@ -188,7 +188,7 @@ Moje skripty pro sestavení LLVM i MinGW jsou inspirované LLVM MinGW.
 │ Co už je dokončeno │
 └────────────────────┘
 Dosavadní verze obsahuje pouze modul `llvm_clang`, skripty podporují také
-sestavení modulů clang_tools a lldb (nebyly však nikdy použity ani testovány).
+sestavení modulů clang_tools a lldb (nebyly však řádně testovány).
 
 Modul `llvm_clang` obsahuje tyto součásti:
 – LLVM nástroje (llvm-ar, llvm-nm, …)
@@ -210,10 +210,15 @@ pomocí llvm_moduly rootovská oprávnění, což je v rozporu
 s cílem tohoto projektu.
 
 2)
+V důsledku toho nelze na Linuxu sestavit program lldb.
+Statické linkování liblldb LLVM oficiálně nepodporuje.
+Z toho důvodu linuxová distribuce není self-hosted.
+
+3)
 Clang++ v linuxové distribuci nemá přednastavenou cestu k hlavičkám
 knihovny libc++. Je proto nutné Clang++ pouštět s argumentem
 `-I ~/[path to your runtime]/sysroot/include/c++/v1`.
-(dpoporučuji nastavit pomocí CXXFLAGS nebo skrze sestavovací systém)
+(dpoporučuji nastavit pomocí CXXFLAGS, clang++.cfg nebo skrze sestavovací systém)
 
 ┌───────┐
 │ Plány │

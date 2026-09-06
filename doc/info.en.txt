@@ -196,7 +196,7 @@ My LLVM and MinGW build scripts are inspired by LLVM MinGW.
 └────────────────┘
 The current version includes only the `llvm_clang` module.
 Scripts also support building `clang_tools` and `lldb`
-(but these haven't yet been used or tested).
+(but these haven't yet been properly tested).
 
 The `llvm_clang` module contains:
 – LLVM tools (llvm-ar, llvm-nm, …)
@@ -204,9 +204,9 @@ The `llvm_clang` module contains:
 – LLD
 – Bash autocomplete for Clang
 
-┌───────────────┐
-│ Známá omezení │
-└───────────────┘
+┌───────────────────┐
+│ Known limitations │
+└───────────────────┘
 1)
 Linux distribution doesn't support dynamic linking.
 This is due to the neccessity to distribute ld-musl.so
@@ -218,10 +218,15 @@ privilegies to install programs build with llvm_moduly,
 which is in contradiction of the goal of this project.
 
 2)
+As a result, the lldb program cannot be compiled on Linux.
+LLVM does not officially support static linking of liblldb.
+For this reason, Linux distribution can't be self-hosted.
+
+3)
 Clang++ from the linux distribution doesn't have preset the path
 to libc++ headers. Therefore it is neccessery to run clang++
 with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
-(I reccomend to set it using CXXFLAGS or via build system)
+(I recommend to set it using CXXFLAGS, clang++.cfg or via build system)
 
 ┌───────┐
 │ Plans │

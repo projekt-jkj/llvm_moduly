@@ -5,11 +5,19 @@ llvm_moduly is a modular distribution of LLVM designed to provide consistent beh
 The project aims to offer a simple way to build and use LLVM without relying on external libraries or fragmented implementations. The build system automatically collects and propagates license information, reducing the burden on users and keeping the packaging process clean even when individual components use different licensing models.
 
 For more information, please refer to:
-- info.cs.txt (Czech version)
-- info.en.txt (English version)
+- doc/info.cs.txt (Czech version)
+- doc/info.en.txt (English version)
+- doc/versions.txt
 
 ## notice
 
 info.sh provides a quick sanity check for the C/C++ toolchain.
 It is a temporary development script intended for local testing and is not configurable for custom installation prefixes.
 Users building with a different layout or install path may need to adjust or replace it.
+
+## distribution
+
+I would like to distribute only self-hosted version of llvm_moduly.
+This however brings some limitations such as impossibility to build lldb on Linux.
+Due to this Linux distribution currently depends on system runtime (glibc, libsdtc++ etc.).
+If you think you have any solution, let me know via issues.
