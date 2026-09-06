@@ -37,4 +37,5 @@ CLANG_TOOLS=(
 );
 LLDB=(
 	lldb
+	liblldb
 );
