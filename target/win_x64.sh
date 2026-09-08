@@ -6,6 +6,7 @@ shift;
 "${COMMAND}" \
 	-architectures=X86 \
 	-target=win_x64 \
+	-toolset=clang \
 	-clang_tools \
 	-lldb \
 	"$@";
