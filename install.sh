@@ -10,6 +10,6 @@ components=("$@");
 mkdir -p "$TO";
 for c in "${components[@]}"
 do
-	cp -r "-t$TO" "${FROM}/tools.${TARGET}/${c}"/* ; 
+	cp -r "-t$TO" "${FROM}/tools.${TARGET}/${c}"/*; 
 done
-cp -r "-t$TO" "${FROM}/runtime.${TARGET}"/* ;
+cp -r "-t$TO" "${FROM}/runtime.${TARGET}"/*;

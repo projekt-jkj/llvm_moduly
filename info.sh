@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2086
 
 # This skript provides a quick sanity check for the C/C++ toolchain.
 # It is a temporary development script intended for local testing and is not configurable for custom installation prefixes.
@@ -19,8 +20,8 @@ ROOT="$1";
 CLANG_PATH="$ROOT/bin";
 STD_MODULE_PATH="$ROOT/sysroot/share/libc++/v1/std.cppm";
 
-CFLAGS="$CFLAGS -static";
-CXXFLAGS="$CXXFLAGS -static -std=c++23";
+CFLAGS="${CFLAGS:-} -static";
+CXXFLAGS="${CXXFLAGS:-} -static -std=c++23";
 
 echo ""
 echo "==========================="
@@ -28,7 +29,7 @@ echo "       c compilation       "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang" "$CFLAGS" -v "$TEST_PATH/main.c" -o "$C_EXE";
+"$CLANG_PATH/clang" $CFLAGS -v "$TEST_PATH/main.c" -o "$C_EXE";
 
 echo ""
 echo "---------------------------"
@@ -52,7 +53,7 @@ echo "      cpp compilation      "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang++" "$CXXFLAGS" -v "$TEST_PATH/main.cpp" -o "$CPP_EXE";
+"$CLANG_PATH/clang++" $CXXFLAGS -v "$TEST_PATH/main.cpp" -o "$CPP_EXE";
 
 echo ""
 echo "---------------------------"
@@ -68,7 +69,7 @@ echo "     dynamic libraries     "
 echo "---------------------------"
 echo ""
 
-ldd "$CPP_EXE";
+ldd "$CPP_EXE" || true;
 
 echo ""
 echo "==========================="
@@ -76,7 +77,7 @@ echo "       thread check        "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang++" "$CXXFLAGS" "$TEST_PATH/threads.cpp" -o "$THREADS_EXE";
+"$CLANG_PATH/clang++" $CXXFLAGS "$TEST_PATH/threads.cpp" -o "$THREADS_EXE";
 "$THREADS_EXE";
 
 echo ""
@@ -85,7 +86,7 @@ echo "     filesystem check      "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang++" "$CXXFLAGS" "$TEST_PATH/filesystem.cpp" -o "$FILESYSTEM_EXE";
+"$CLANG_PATH/clang++" $CXXFLAGS "$TEST_PATH/filesystem.cpp" -o "$FILESYSTEM_EXE";
 "$FILESYSTEM_EXE";
 
 echo ""
@@ -94,7 +95,7 @@ echo "     exceptions check      "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang++" "$CXXFLAGS" "$TEST_PATH/exceptions.cpp" -o "$EXCEPTIONS_EXE";
+"$CLANG_PATH/clang++" $CXXFLAGS "$TEST_PATH/exceptions.cpp" -o "$EXCEPTIONS_EXE";
 "$EXCEPTIONS_EXE";
 
 echo ""
@@ -103,8 +104,8 @@ echo "     import std check      "
 echo "==========================="
 echo ""
 
-"$CLANG_PATH/clang++" "$CXXFLAGS" -x c++-module "$STD_MODULE_PATH" --precompile -o "$TEST_PATH/std.pcm";
-"$CLANG_PATH/clang++" "$CXXFLAGS" "$TEST_PATH/std.cpp" "-fprebuilt-module-path=$TEST_PATH" "$TEST_PATH/std.pcm" -o "$STD_EXE";
+"$CLANG_PATH/clang++" $CXXFLAGS -x c++-module "$STD_MODULE_PATH" --precompile -o "$TEST_PATH/std.pcm";
+"$CLANG_PATH/clang++" $CXXFLAGS "$TEST_PATH/std.cpp" "-fprebuilt-module-path=$TEST_PATH" "$TEST_PATH/std.pcm" -o "$STD_EXE";
 "$STD_EXE";
 
 echo "";
