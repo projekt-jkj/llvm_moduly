@@ -129,6 +129,16 @@ Shared arguments:
     Format: ${SYSTEM}_${PLATFORM}
     SYSTEM = operating system (supported values: win, lin)
     PLATFORM = CPU architecture (supported values: x64)
+-toolset={}
+	The toolset used to build LLVM tools.
+	This affects the runtime libraries that the user must have installed.
+	Options:
+		msvc = cl.exe with MSVC runtime libraries
+		gcc = GCC/G++ with its runtime libraries
+		clang = Clang with LLVM runtime libraries (statically linked)
+		clang_dynamic = Clang with LLVM runtime libraries (dynamically linkované)
+		clang_gcc = Clang with GCC runtime libraries
+
 -log={}
     File where script output is stored.
     Default: `/dev/stdout`

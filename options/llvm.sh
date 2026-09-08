@@ -29,7 +29,6 @@ LLVM_OPTIONS=(
 	-DLLVM_BUILD_LLVM_DYLIB=OFF
     -DLLVM_LINK_LLVM_DYLIB=OFF
     -DLLVM_ENABLE_BINDINGS=OFF
-	-DLLVM_ENABLE_LIBCXX=ON
     "-DLLVM_TARGETS_TO_BUILD=$ARCHITECTURES"
 	"-DLLVM_DEFAULT_TARGET_TRIPLE=$LLVM_TARGET"
 );
@@ -76,6 +75,31 @@ else
     echo "Unknown build type.";
     exit 1;
 fi
+
+# -----------------------
+#    toolset selection
+# -----------------------
+
+case "$TOOLSET" in
+	msvc)
+		CMAKE_OPTIONS+=(-DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl);
+		;;
+	gcc)
+		CMAKE_OPTIONS+=(-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++);
+		;;
+	clang)
+		CMAKE_OPTIONS+=(-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++);
+		LLVM_OPTIONS+=(-DLLVM_ENABLE_LIBCXX=ON -DLLVM_STATIC_LINK_CXX_STDLIB=ON);
+		;;
+	clang_dynamic)
+		CMAKE_OPTIONS+=(-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++);
+		LLVM_OPTIONS+=(-DLLVM_ENABLE_LIBCXX=ON -DLLVM_STATIC_LINK_CXX_STDLIB=OFF);
+		;;
+	clang_gcc)
+		CMAKE_OPTIONS+=(-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++);
+		LLVM_OPTIONS+=(-DLLVM_ENABLE_LIBCXX=OFF -DLLVM_STATIC_LINK_CXX_STDLIB=OFF);
+		;;
+esac
 
 # -----------------------------
 #    distribution definition

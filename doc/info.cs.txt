@@ -129,6 +129,16 @@ Společné argumenty:
 	Formát: ${SYSTEM}_${PLATFORM}
 	SYSTEM = operační systém (podporované hodnoty: win, lin)
 	PLATFORM = architektura procesoru (podporované hodnoty: x64)
+-toolset={}
+	Sada nástrojů použitá pro sestavení LLVM nástrojů.
+	Ovlivňuje runtime knihovny, které musí mít uživatel nainstalován.
+	Možnosti:
+		msvc = cl.exe a MSVC runtime knihovny
+		gcc = GCC/G++ a jeho runtime knihovny
+		clang = Clang a LLVM runtime knihovny (staticky linkované)
+		clang_dynamic = Clang a LLVM runtime knihovny (dynamicky linkované)
+		clang_gcc = Clang a GCC runtime knihovny
+
 -log={}
 	Soubor, do kterého je uložen standardní výstup skriptů.
 	Výchozí: `/dev/stdout`

@@ -21,6 +21,7 @@ BUILD_TYPE=release;
 ARCHITECTURES="all";
 BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
+TOOLSET=default;
 
 # -----------------------
 #    main parsing loop
@@ -45,6 +46,9 @@ case $a in
 
 	-target=*)
 		TARGET="${a#*=}";
+		;;
+	-toolset=*)
+		TOOLSET="${a#*=}";
 		;;
 	-log=*)
 		LOG_FILE="${a#*=}";
@@ -96,7 +100,7 @@ detect_system()
 {
 	case "$(uname -o)" in
 		Msys)
-			echo "win"
+			echo "win";
 			;;
 		GNU/Linux)
 			echo "lin";
