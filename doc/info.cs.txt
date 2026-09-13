@@ -5,7 +5,7 @@ Llvm_moduly je modulární distribuce LLVM,
 která cílí na konzistentní chování na všech
 platformách. Toho dosahuje pomocí důsledného
 využívání LLVM nástrojů (clang, lld, …)
-a runtime knihoven (libc++, …).
+a runtime knihoven (libc++, compiler-rt, …).
 Protože LLVM implementace standardní knihovny C
 není komplentní, použila jsem místo ní vlastní
 sestavení MinGW CRT pro Windows nebo Musl pro Linux.
@@ -18,24 +18,25 @@ Pomocné skripty:
 – argument_parser.sh
   > Obsahuje algoritmus pro parsování argumentů příkazové řádky.
   > Sdílený všemi ostatními skripty.
-  > Obsahuje také definice základních proměnných (TARGET, PLATFORM, cesty ke zdrojákům apod.)
+  > Obsahuje také definice základních proměnných
+    (TARGET, PLATFORM, cesty ke zdrojákům apod.)
 – helpers.sh
   > Definice pomocných funkcí, které jsou využity ve více různých skriptech.
 – init_repozitories.sh
   > Naklonuje všechny potřebné repozitáře.
-- options/llvm_components.sh
+– options/llvm_components.sh
   > Přiřazuje programy a knihovny do jednotlivých modulů.
 – options/*.sh
   > Definice přepínačů pro konfiguraci LLVM projektu a MinGW.
 – target/*.sh
   > Spustí `build_all.sh` s předdefinovanými argumenty příkazové řádky.
-  > Slouží jako ukázka i jako dokumentace toho, co je skutečně podporováno (nebo alespoň bude).
+  > Slouží jako ukázka i jako dokumentace toho, co je skutečně podporováno.
   > Volitelný argument umožňuje změnit spuštěný skript.
   > Případné další argumenty jsou předány spuštěnému skriptu.
 – copy-msys-dependencies.sh
   > Zkopíruje dynamické knihovny z MSYS prostředí, ve kterém bylo llvm_moduly sestaveno.
   > Převzato z repozitáře LLVM MinGW (https://github.com/mstorsjo/llvm-mingw).
-- install.sh FROM TO TARGET COMPONENTS...
+– install.sh FROM TO TARGET COMPONENTS...
   > Zkopíruje sestavené moduly do místa použití.
   > FROM = cesta k hotovým modulům (např. ./install)
   > TO = místo instalce (/usr/local, /$HOME/jkj apod.)
@@ -46,21 +47,21 @@ Pomocné skripty:
 Sestavovací skripty:
 
 – build_all.sh
-  > Spustí ostatní skripty podle použité konfigurace
+  > Spustí ostatní skripty podle použité konfigurace.
 – build_llvm.sh
-  > Sestaví a nainstaluje LLVM nástroje, Clang a další programy
-  > V případě testovací konfigurace také spustí testy
-- build_llvm_libraries.sh
+  > Sestaví a nainstaluje LLVM nástroje, Clang a další programy.
+  > V případě testovací konfigurace také spustí testy.
+– build_llvm_libraries.sh
   > Sestaví a nainstaluje LLVM knihovny.
   > Zatím neimplementováno.
 
-- build_runtime.sh
+– build_runtime.sh
   > Spustí následující skripty v závislosti na cílové platformě.
-- install_resourse_headers.sh
+– install_resourse_headers.sh
   > Nainstaluje hlavičkové soubory Clangu.
 – build_mingw.sh
   > Sestaví a nainstaluje MinGW runtime knihovny.
-- build_musl.sh
+– build_musl.sh
   > Sestaví a nainstaluje Musl a hlavičky linuxového kernelu.
 – build_llvm_runtime.sh
   > Sestaví a nainstaluje LLVM knihovny (compiler-rt, libc++, …).
@@ -69,13 +70,13 @@ Sestavovací skripty:
 Pomocné složky:
 
 – source/{projekt}_{tag}/
-  > Naklonované zdrojové kódy
+  > Naklonované zdrojové kódy.
 – build/{target}/{projekt}_{tag}/
-  > Artefakty sestavení pro jednotlivé projekty nebo jejich části
+  > Artefakty sestavení pro jednotlivé projekty nebo jejich části.
 – install/tools.{target}/{modul}/
-  > Konečný modul obsahující všechny sestavené nástroje
-  > Distribuovatelný jako samostatný balíček
-- install/runtime.{target}/
+  > Konečný modul obsahující všechny sestavené nástroje.
+  > Distribuovatelný jako samostatný balíček.
+– install/runtime.{target}/
   > Všechny runtime knihovny, hlavičkové soubory a licence.
 
 ┌──────────────────┐
@@ -85,6 +86,7 @@ llvm_clang:
 – clang
 – lld
 – LLVM nástroje (llvm-ar, llvm-nm atd.)
+– Bash autocomplete pro Clang
 
 clang_tools:
 – clangd
@@ -93,13 +95,14 @@ clang_tools:
 
 lldb:
 – lldb
+– liblldb
 
 runtime moduly (např. win_x64, lin_x64)
 – compiler-rt (pouze builtins)
 – libc++, libc++abi, libunwind
 – MinGW CRT (pouze Windows)
-- Musl a kernelové hlavičky (pouze Linux)
-(sestavené pro příšlušnou platformu)
+– Musl a kernelové hlavičky (pouze Linux)
+(sestavené pro příslušnou platformu)
 
 ┌───────────────────┐
 │ Argumenty skriptů │
@@ -152,20 +155,21 @@ Společné argumenty:
 Argumenty specifické pro LLVM:
 
 -build_type={}
-	Určuje, které části LLVM budou sestaveny a s jakými optimalizacemi
+	Určuje, které části LLVM budou sestaveny a s jakými optimalizacemi.
 	Platné hodnoty: realese, llvm_build, llvm_test, runtime_build, runtime_test
 -clang={}
 	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
 
 -architectures={}
-	Seznam architektur oddělených středníky, které bude sestavené LLVM podporovat
+	Seznam architektur oddělených středníky, které bude sestavené LLVM podporovat.
 	Např. AArch64;Mips;WebAssembly;X86;XCore
-	Lze také použít hodnotu all (všechny platformy) a host (platforma, na které sestavení probíhá)
+	Lze také použít hodnotu all (všechny platformy)
+	a host (platforma, na které sestavení probíhá).
 	Podrobnosti viz dokumentace LLVM.
 -clang_tools
-	Součástí sestavení bude také modul clang_tools
+	Součástí sestavení bude také modul clang_tools.
 -lldb
-	Sučástí sestavení bude také modul lldb
+	Sučástí sestavení bude také modul lldb.
 -msys={}
 	Zkopíruje dynamicky linkované knihovny ze zadaného prostředí MSYS (např. MINGW64 nebo CLANG64).
 	Díky této volbě nemusí uživatel programy spouštět v MSYS ani ručně zajišťovat závislosti.
@@ -200,12 +204,6 @@ Moje skripty pro sestavení LLVM i MinGW jsou inspirované LLVM MinGW.
 Dosavadní verze obsahuje pouze modul `llvm_clang`, skripty podporují také
 sestavení modulů clang_tools a lldb (nebyly však řádně testovány).
 
-Modul `llvm_clang` obsahuje tyto součásti:
-– LLVM nástroje (llvm-ar, llvm-nm, …)
-– Clang
-– LLD
-– Bash autocomplete pro Clang
-
 ┌───────────────┐
 │ Známá omezení │
 └───────────────┘
@@ -236,15 +234,15 @@ knihovny libc++. Je proto nutné Clang++ pouštět s argumentem
 – Doplnění modulů `clang_libraries` a `llvm_libraries`.
 – Rozšíření runtime balíčků o dynamické knihovny, sanitizéry a další části LLVM.
 – Podpora ARMu a dalších hardwarových platforem.
-- Experimenty s LLVM libc.
+– Experimenty s LLVM libc.
 
 ┌─────────────────┐
 │ Co není v plánu │
 └─────────────────┘
-- Podpora glibc nebo jiných implementací standardní knihovny C.
-- Podpora libstdc++, MSVC STL nebo jiných implementací standardní knihovny C++.
-- Sestavení nástrojů, které nejsou součástí LLVM.
-- Distribuce balíčků sestavených s jinou konfigurací, než je uvedena ve složce `target/`.
+– Podpora glibc nebo jiných implementací standardní knihovny C.
+– Podpora libstdc++, MSVC STL nebo jiných implementací standardní knihovny C++.
+– Sestavení nástrojů/knihoven, které nejsou součástí LLVM, MinGW nebo Musl.
+– Distribuce balíčků sestavených s jinou konfigurací, než je uvedena ve složce `target/`.
 
 ┌────────┐
 │ Odkazy │

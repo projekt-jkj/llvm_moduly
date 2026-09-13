@@ -5,7 +5,7 @@ Llvm_moduly is a modular distribution of LLVM
 that aims for consistent behavior across all
 platforms. It achieves this by strictly using
 LLVM tools (clang, lld, …) and runtime libraries
-(libc++, …). Because LLVM’s implementation of
+(libc++, compiler-rt, …). Because LLVM’s implementation of
 the C standard library is incomplete, I use
 a custom MinGW CRT build for Windows or Musl
 for Linux instead.
@@ -23,19 +23,19 @@ Helper scripts:
   > Definitions of helper functions used across multiple scripts.
 – init_repozitories.sh
   > Clones all required repositories.
-- options/llvm_components.sh
+– options/llvm_components.sh
   > Assigns programs and libraries to individual modules.
 – options/*.sh
   > Definitions of switches for configuring the LLVM project and MinGW.
 – target/*.sh
   > Runs `build_all.sh` with predefined command‑line arguments.
-  > Serves as both an example and documentation of what is actually supported (or will be).
+  > Serves as both an example and documentation of what is actually supported.
   > An optional argument allows changing the script being executed.
   > Additional arguments are passed to the executed script.
 – copy-msys-dependencies.sh
   > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
   > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
-- install.sh FROM TO TARGET COMPONENTS...
+– install.sh FROM TO TARGET COMPONENTS...
   > Copies built modules to the place of use.
   > FROM = path to finished modules (e.g. ./install)
   > TO = installation location (/usr/local, /$HOME/jkj, etc.)
@@ -50,17 +50,17 @@ Build scripts:
 – build_llvm.sh
   > Builds and installs LLVM tools, Clang, and other programs.
   > Runs tests in test configurations.
-- build_llvm_libraries.sh
+– build_llvm_libraries.sh
   > Builds and installs LLVM libraries.
   > Not yet implemented.
 
-- build_runtime.sh
-  > Runs the following scripts depending on the target platform
-- install_resourse_headers.sh
+– build_runtime.sh
+  > Runs the following scripts depending on the target platform.
+– install_resourse_headers.sh
   > Installs Clang resource headers
 – build_mingw.sh
   > Builds and installs MinGW runtime libraries
-- build_musl.sh
+– build_musl.sh
   > Builds and installs Musl and Linux kernel headers.
 – build_llvm_runtime.sh
   > Builds and installs LLVM runtime libraries (compiler‑rt, libc++, …).
@@ -69,14 +69,14 @@ Build scripts:
 Helper directories:
 
 – source/{project}_{tag}/
-  > Cloned source code
+  > Cloned source code.
 – build/{target}/{project}_{tag}/
-  > Build artifacts for individual projects or components
+  > Build artifacts for individual projects or components.
 – install/tools.{target}/{module}/
-  > Final module containing all built tools
-  > Distributed as an independent package
-- install/runtime.{target}/
-  > All runtime libraries, headers, and licenses
+  > Final module containing all built tools.
+  > Distributed as an independent package.
+– install/runtime.{target}/
+  > All runtime libraries, headers, and licenses.
 
 ┌──────────────────┐
 │ Module structure │
@@ -85,6 +85,7 @@ llvm_clang:
 – clang
 – lld
 – LLVM tools (llvm-ar, llvm-nm, etc.)
+– Bash autocomplete for Clang
 
 clang_tools:
 – clangd
@@ -93,12 +94,13 @@ clang_tools:
 
 lldb:
 – lldb
+– liblldb
 
 runtime modules (e.g. win_x64, lin_x64)
 – compiler‑rt (builtins only)
 – libc++, libc++abi, libunwind
 – MinGW CRT (Windows only)
-- Musl (Linux only)
+– Musl and kernel headers (Linux only)
 (built for the corresponding platform)
 
 ┌──────────────────┐
@@ -111,21 +113,21 @@ but another script does, it isn't considered an error.
 Shared arguments:
 
 -llvm={}
-    LLVM version used for downloading sources and building
+    LLVM version used for downloading sources and building.
     Example: `llvmorg-22.1.8`
 -mingw={}
-    MinGW version used for downloading sources and building
+    MinGW version used for downloading sources and building.
     Example: `v14.0.0`
 -musl={}
-    Musl version used for downloading sources and building
+    Musl version used for downloading sources and building.
     Example: `v1.2.6`
 -linux={}
-    Linux kernel version used for downloading sources and building
+    Linux kernel version used for downloading sources and building.
     Example: `v7.1`
 
 -target={}
-    Target platform for which llvm_moduly is built
-    Also the default target platform for the built Clang
+    Target platform for which llvm_moduly is built.
+    Also the default target platform for the built Clang.
     Format: ${SYSTEM}_${PLATFORM}
     SYSTEM = operating system (supported values: win, lin)
     PLATFORM = CPU architecture (supported values: x64)
@@ -143,7 +145,7 @@ Shared arguments:
     File where script output is stored.
     Default: `/dev/stdout`
 -cores={}
-    Number of CPU cores used for building
+    Number of CPU cores used for building.
     Default: output of `nproc`
 -install_prefix={}
     Directory where built programs and libraries are copied.
@@ -152,25 +154,25 @@ Shared arguments:
 LLVM‑specific arguments:
 
 -build_type={}
-    Determines which parts of LLVM are built and with what optimizations
+    Determines which parts of LLVM are built and with what optimizations.
     Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test
 -clang={}
 	Allows to set path to the Clang for standalone build of runtime libraries.
 	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
 
 -architectures={}
-    Semicolon‑separated list of architectures supported by the built LLVM
+    Semicolon‑separated list of architectures supported by the built LLVM.
     Example: AArch64;Mips;WebAssembly;X86;XCore
-    Special values: all (all platforms), host (platform used for building)
-    See LLVM documentation for details
+    Special values: all (all platforms), host (platform used for building).
+    See LLVM documentation for details.
 -clang_tools
     Includes the clang_tools module in the build
 -lldb
-    Includes the lldb module in the build
+    Includes the lldb module in the build.
 -msys={}
-    Copies dynamically linked libraries from the specified MSYS environment
+    Copies dynamically linked libraries from the specified MSYS environment.
     (e.g. MINGW64 or CLANG64)
-    This allows users to run programs outside MSYS without manually resolving dependencies
+    This allows users to run programs outside MSYS without manually resolving dependencies.
 
 ┌────────────┐
 │ Motivation │
@@ -208,12 +210,6 @@ The current version includes only the `llvm_clang` module.
 Scripts also support building `clang_tools` and `lldb`
 (but these haven't yet been properly tested).
 
-The `llvm_clang` module contains:
-– LLVM tools (llvm-ar, llvm-nm, …)
-– Clang
-– LLD
-– Bash autocomplete for Clang
-
 ┌───────────────────┐
 │ Known limitations │
 └───────────────────┘
@@ -244,15 +240,15 @@ with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
 – Add `clang_libraries` and `llvm_libraries`.
 – Extend runtime packages with dynamic libraries, sanitizers, and other LLVM components.
 – Support for ARM and other hardware platforms.
-- Experiments with LLVM libc.
+– Experiments with LLVM libc.
 
 ┌─────────────┐
 │ Not planned │
 └─────────────┘
-- Support for glibc or other C standard library implementations
-- Support for libstdc++, MSVC STL, or other C++ standard library implementations
-- Building tools that are not part of LLVM
-- Distributing packages built with configurations not listed in `target/`
+– Support for glibc or other C standard library implementations
+– Support for libstdc++, MSVC STL, or other C++ standard library implementations
+– Building tools/libraries that are not part of LLVM, MinGW or Musl.
+– Distributing packages built with configurations not listed in `target/`
 
 ┌───────┐
 │ Links │
