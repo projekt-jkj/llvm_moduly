@@ -9,12 +9,6 @@ For more information, please refer to:
 - doc/info.en.txt (English version)
 - doc/versions.txt
 
-## notice
-
-info.sh provides a quick sanity check for the C/C++ toolchain.
-It is a temporary development script intended for local testing and is not configurable for custom installation prefixes.
-Users building with a different layout or install path may need to adjust or replace it.
-
 ## distribution
 
 I would like to distribute only self-hosted version of llvm_moduly.

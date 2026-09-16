@@ -36,13 +36,21 @@ Pomocné skripty:
 – copy-msys-dependencies.sh
   > Zkopíruje dynamické knihovny z MSYS prostředí, ve kterém bylo llvm_moduly sestaveno.
   > Převzato z repozitáře LLVM MinGW (https://github.com/mstorsjo/llvm-mingw).
-– install.sh FROM TO TARGET COMPONENTS...
+
+Vývojové skripty:
+
+– dev/install.sh FROM TO TARGET COMPONENTS...
   > Zkopíruje sestavené moduly do místa použití.
   > FROM = cesta k hotovým modulům (např. ./install)
   > TO = místo instalce (/usr/local, /$HOME/jkj apod.)
   > TARGET = cíl použitý pro sestavení
   > COMPONENTS = volitelný seznam komponent, které budou nainstalovány
   > Runtime pro daný target je nainstalován vždy.
+
+- dev/info.sh INSTALLATION_PATH
+  > Rychlá kontrola funkčnosti sady nástrojů pro C/C++.
+  > Vyžaduje nainstalování balíčku `llvm_clang` a runtimu pro příslušný target,
+    např. pomocí skriptu dev/install.sh
 
 Sestavovací skripty:
 

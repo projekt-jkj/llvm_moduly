@@ -35,13 +35,21 @@ Helper scripts:
 – copy-msys-dependencies.sh
   > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
   > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
-– install.sh FROM TO TARGET COMPONENTS...
+
+Vývojové skripty:
+
+– dev/install.sh FROM TO TARGET COMPONENTS...
   > Copies built modules to the place of use.
   > FROM = path to finished modules (e.g. ./install)
   > TO = installation location (/usr/local, /$HOME/jkj, etc.)
   > TARGET = target used for building
   > COMPONENTS = optional list of components to install
   > Runtime for the given target is always installed.
+- dev/info.sh INSTALLATION_PATH
+  > Quick sanity check for the C/C++ toolchain.
+  > Requires the installation of the `llvm_clang` package
+    and the runtime for the relevant target,
+	e.g. using dev/install.sh skript.
 
 Build scripts:
 
