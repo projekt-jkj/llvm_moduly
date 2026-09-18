@@ -24,7 +24,7 @@ Pomocné skripty:
   > Definice pomocných funkcí, které jsou využity ve více různých skriptech.
 – init_repozitories.sh
   > Naklonuje všechny potřebné repozitáře.
-– options/llvm_components.sh
+– options/components.sh
   > Přiřazuje programy a knihovny do jednotlivých modulů.
 – options/*.sh
   > Definice přepínačů pro konfiguraci LLVM projektu a MinGW.
@@ -52,6 +52,10 @@ Vývojové skripty:
   > Vyžaduje nainstalování balíčku `llvm_clang` a runtimu pro příslušný target,
     např. pomocí skriptu dev/install.sh
 
+- dev/upload.sh INSTALLATION_PATH WHERE tag
+  > Zabalí všechny moduly uložené ve složce INSTALLATION_PATH do složky WHERE ve formátu .tar.xz 
+  > Pokud je předán argument TAG, pokusí se také nahrát balíček jako přílohu k příslušnému GitHub releasu.
+
 Sestavovací skripty:
 
 – build_all.sh
@@ -60,8 +64,8 @@ Sestavovací skripty:
   > Sestaví a nainstaluje LLVM nástroje, Clang a další programy.
   > V případě testovací konfigurace také spustí testy.
 – build_llvm_libraries.sh
-  > Sestaví a nainstaluje LLVM knihovny.
-  > Zatím neimplementováno.
+  > Sestaví a nainstaluje LLVM a Clang knihovny.
+  > V případě testovací konfigurace také spustí testy.
 
 – build_runtime.sh
   > Spustí následující skripty v závislosti na cílové platformě.
@@ -86,6 +90,9 @@ Pomocné složky:
   > Distribuovatelný jako samostatný balíček.
 – install/runtime.{target}/
   > Všechny runtime knihovny, hlavičkové soubory a licence.
+– install/libraries.{target}/{modul}/
+  > Konečný modul obsahující všechny sestavené knihovny.
+  > Závisí na odpovídajícím install/runtime.{target}/ runtime.
 
 ┌──────────────────┐
 │ Struktura modulů │
@@ -111,6 +118,12 @@ runtime moduly (např. win_x64, lin_x64)
 – MinGW CRT (pouze Windows)
 – Musl a kernelové hlavičky (pouze Linux)
 (sestavené pro příslušnou platformu)
+
+clang_libraries
+- libclang a další Clang knihovny (libclang*.a)
+
+llvm_libraries
+- LLVM knihovny (libLLVM*.a)
 
 ┌───────────────────┐
 │ Argumenty skriptů │
@@ -164,7 +177,7 @@ Argumenty specifické pro LLVM:
 
 -build_type={}
 	Určuje, které části LLVM budou sestaveny a s jakými optimalizacemi.
-	Platné hodnoty: realese, llvm_build, llvm_test, runtime_build, runtime_test
+	Platné hodnoty: realese, llvm_build, llvm_test, runtime_build, runtime_test, libraries_build, libraries_test
 -clang={}
 	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
 
@@ -177,7 +190,11 @@ Argumenty specifické pro LLVM:
 -clang_tools
 	Součástí sestavení bude také modul clang_tools.
 -lldb
-	Sučástí sestavení bude také modul lldb.
+	Součástí sestavení bude také modul lldb.
+-clang_libraries
+	Součástí sestavení budou také knihovny Clangu využívající runtime z llvm_moduly.
+-llvm_libraries
+	Součástí sestavení budou také knihovny LLVM využívající runtime z llvm_moduly.
 -msys={}
 	Zkopíruje dynamicky linkované knihovny ze zadaného prostředí MSYS (např. MINGW64 nebo CLANG64).
 	Díky této volbě nemusí uživatel programy spouštět v MSYS ani ručně zajišťovat závislosti.
@@ -212,6 +229,9 @@ Moje skripty pro sestavení LLVM i MinGW jsou inspirované LLVM MinGW.
 Dosavadní verze obsahuje pouze modul `llvm_clang`, skripty podporují také
 sestavení modulů clang_tools a lldb (nebyly však řádně testovány).
 
+Součástí je také kompletní runtime pro platformy Windows x64 a Linux x64.
+Knihovny clang a llvm využívající tento runtime jsou v přípravě.
+
 ┌───────────────┐
 │ Známá omezení │
 └───────────────┘
@@ -220,7 +240,7 @@ Linuxová distribuce nepodporuje dynamické linkování.
 Důvodem je nutnost spolu s runtimem distribuovat také
 dynamický linker ld-musl.so. Cesta k tomuto souboru musí být
 známá již v době sestavení, poté ji již nelze nijak konfigurovat.
-Protože Musl runtime na většině Linuxových distribucích
+Protože Musl runtime na většině Linuxových distribucích není
 předinstalovaný, vyžadovala by instalace programů sestavených
 pomocí llvm_moduly rootovská oprávnění, což je v rozporu
 s cílem tohoto projektu.
@@ -239,7 +259,6 @@ knihovny libc++. Je proto nutné Clang++ pouštět s argumentem
 ┌───────┐
 │ Plány │
 └───────┘
-– Doplnění modulů `clang_libraries` a `llvm_libraries`.
 – Rozšíření runtime balíčků o dynamické knihovny, sanitizéry a další části LLVM.
 – Podpora ARMu a dalších hardwarových platforem.
 – Experimenty s LLVM libc.

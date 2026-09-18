@@ -23,7 +23,7 @@ Helper scripts:
   > Definitions of helper functions used across multiple scripts.
 – init_repozitories.sh
   > Clones all required repositories.
-– options/llvm_components.sh
+– options/components.sh
   > Assigns programs and libraries to individual modules.
 – options/*.sh
   > Definitions of switches for configuring the LLVM project and MinGW.
@@ -45,11 +45,16 @@ Vývojové skripty:
   > TARGET = target used for building
   > COMPONENTS = optional list of components to install
   > Runtime for the given target is always installed.
+
 - dev/info.sh INSTALLATION_PATH
   > Quick sanity check for the C/C++ toolchain.
   > Requires the installation of the `llvm_clang` package
     and the runtime for the relevant target,
 	e.g. using dev/install.sh skript.
+
+- dev/upload.sh INSTALLATION_PATH WHERE tag
+  > Packs all modules stored in the INSTALLATION_PATH folder into the WHERE folder in .tar.xz format
+  > If the TAG argument is provided, it will also attempt to upload the package as an asset to the corresponding GitHub release.
 
 Build scripts:
 
@@ -59,8 +64,8 @@ Build scripts:
   > Builds and installs LLVM tools, Clang, and other programs.
   > Runs tests in test configurations.
 – build_llvm_libraries.sh
-  > Builds and installs LLVM libraries.
-  > Not yet implemented.
+  > Builds and installs LLVM and Clang libraries.
+  > Runs tests in test configurations.
 
 – build_runtime.sh
   > Runs the following scripts depending on the target platform.
@@ -85,6 +90,9 @@ Helper directories:
   > Distributed as an independent package.
 – install/runtime.{target}/
   > All runtime libraries, headers, and licenses.
+– install/libraries.{target}/{module}/
+  > Final module containing all built libraries.
+  > Depends on the corresponding install/runtime.{target}/ runtime.
 
 ┌──────────────────┐
 │ Module structure │
@@ -110,6 +118,12 @@ runtime modules (e.g. win_x64, lin_x64)
 – MinGW CRT (Windows only)
 – Musl and kernel headers (Linux only)
 (built for the corresponding platform)
+
+clang_libraries
+- libclang and other Clang libraries (libclang*.a)
+
+llvm_libraries
+- LLVM libraries (libLLVM*.a)
 
 ┌──────────────────┐
 │ Script arguments │
@@ -163,7 +177,7 @@ LLVM‑specific arguments:
 
 -build_type={}
     Determines which parts of LLVM are built and with what optimizations.
-    Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test
+    Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test, libraries_build, libraries_test
 -clang={}
 	Allows to set path to the Clang for standalone build of runtime libraries.
 	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
@@ -177,6 +191,11 @@ LLVM‑specific arguments:
     Includes the clang_tools module in the build
 -lldb
     Includes the lldb module in the build.
+-clang_libraries
+	The build will also include Clang libraries that use the runtime from llvm_modules.
+-llvm_libraries
+	The build will also include LLVM libraries that use the runtime from llvm_modules.
+
 -msys={}
     Copies dynamically linked libraries from the specified MSYS environment.
     (e.g. MINGW64 or CLANG64)
@@ -218,6 +237,9 @@ The current version includes only the `llvm_clang` module.
 Scripts also support building `clang_tools` and `lldb`
 (but these haven't yet been properly tested).
 
+It also includes a complete runtime for the Windows x64 and Linux x64 platforms.
+The clang and llvm libraries that use this runtime are currently in development.
+
 ┌───────────────────┐
 │ Known limitations │
 └───────────────────┘
@@ -245,7 +267,6 @@ with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
 ┌───────┐
 │ Plans │
 └───────┘
-– Add `clang_libraries` and `llvm_libraries`.
 – Extend runtime packages with dynamic libraries, sanitizers, and other LLVM components.
 – Support for ARM and other hardware platforms.
 – Experiments with LLVM libc.

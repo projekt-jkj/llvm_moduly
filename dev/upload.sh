@@ -9,6 +9,11 @@ TAG="${3-}";
 
 pack_and_install()
 {
+	if [ ! -d "$1" ]
+	then
+		return;
+	fi
+
 	cd "$1";
 
 	target="${1##+(?).}";
@@ -30,7 +35,7 @@ pack_and_install()
 
 mkdir -p "$WHERE";
 
-for package in "${INSTALLATION_PATH}"/tools.*/*
+for package in "${INSTALLATION_PATH}"/tools.*/* "${INSTALLATION_PATH}"/libraries.*/*
 do
 	name=${package##+(?)/};
 	pack_and_install "$package" "$name";

@@ -42,7 +42,7 @@ LLDB=(
 
 CLANG_LIBRARIES=(
 	clang-headers
-	libclang
+	libclang_static
 	
 	clangAnalysis
 	clangAnalysisFlowSensitive
