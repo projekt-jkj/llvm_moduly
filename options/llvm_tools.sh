@@ -2,6 +2,8 @@
 # shellcheck disable=SC2034
 # shellcheck source=/dev/null
 
+source "./options/common.sh";
+
 ACTIVE_PROJECTS="clang;lld";
 DISTRIBUTIONS=("llvm_clang");
 
@@ -26,20 +28,10 @@ CMAKE_OPTIONS=(
 LLVM_OPTIONS=(
 	"-DLLVM_ENABLE_PROJECTS=$ACTIVE_PROJECTS"
 	"-DLLVM_DISTRIBUTIONS=$(join "${DISTRIBUTIONS[@]}" )"
-	-DLLVM_BUILD_LLVM_DYLIB=OFF
-    -DLLVM_LINK_LLVM_DYLIB=OFF
-    -DLLVM_ENABLE_BINDINGS=OFF
-    "-DLLVM_TARGETS_TO_BUILD=$ARCHITECTURES"
-	"-DLLVM_DEFAULT_TARGET_TRIPLE=$LLVM_TARGET"
+	"${LLVM_BASE_OPTIONS[@]}"
 );
 CLANG_OPTIONS=(
-	-DCLANG_VENDOR="llvm_moduly ($LLVM_MODULY_VERSION)"
-	-DCLANG_DEFAULT_RTLIB=compiler-rt
-	-DCLANG_DEFAULT_UNWINDLIB=libunwind
-	-DCLANG_DEFAULT_CXX_STDLIB=libc++
-	-DCLANG_DEFAULT_LINKER=lld
-	-DCLANG_RESOURCE_DIR=../resource
-	-DDEFAULT_SYSROOT=../sysroot
+	"${CLANG_BASE_OPTIONS[@]}"
 );
 LLD_OPTIONS=(
 	-DLLD_VENDOR="llvm_moduly ($LLVM_MODULY_VERSION)"
@@ -106,7 +98,7 @@ esac
 #    distribution definition
 # -----------------------------
 
-source "./options/llvm_components.sh";
+source "./options/components.sh";
 LLVM_OPTIONS+=("-DLLVM_llvm_clang_DISTRIBUTION_COMPONENTS=$( join "${LLVM_CLANG[@]}" )");
 
 if [ "$BUILD_CLANG_TOOLS" = ON ]

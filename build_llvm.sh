@@ -4,7 +4,7 @@ set -ue;
 
 source "./argument_parser.sh";
 source "./helpers.sh";
-source "./options/llvm.sh";
+source "./options/llvm_tools.sh";
 
 log_header "LLVM";
 mkcd "$LLVM_BUILD_DIR";

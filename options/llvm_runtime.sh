@@ -2,19 +2,11 @@
 # shellcheck disable=SC2034
 # shellcheck source=/dev/null
 
+source "./options/common.sh";
+
 CMAKE_OPTIONS=(
-	"-DCMAKE_SYSTEM_NAME=$LLVM_SYSTEM_NAME"
-	"-DCMAKE_SYSROOT=${SYSROOT_DIR}"
+	"${CMAKE_RUNTIME_OPTIONS[@]}"
 	"-DCMAKE_INSTALL_PREFIX=${RESOURCE_DIR}"
-	"-DCMAKE_C_FLAGS='-resource-dir=$(path_conversion "$RESOURCE_DIR")'"
-	"-DCMAKE_CXX_FLAGS='-resource-dir=$(path_conversion "$RESOURCE_DIR")'"
-	-DCMAKE_C_COMPILER_WORKS=ON
-	-DCMAKE_CXX_COMPILER_WORKS=ON
-	"-DCMAKE_C_COMPILER=${CLANG}"
-	"-DCMAKE_CXX_COMPILER=${CLANG_PP}"
-	"-DCMAKE_AR=${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ar${EXE}"
-	"-DCMAKE_RANLIB=${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ranlib${EXE}"
-	"-DCMAKE_C_COMPILER_TARGET=${LLVM_TARGET}"
 );
 COMPILER_RT_OPTIONS=(
 	-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
