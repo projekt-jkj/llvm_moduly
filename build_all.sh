@@ -13,4 +13,8 @@ fi
 
 ./build_llvm.sh "$@";
 ./build_runtime.sh "$@";
-./build_llvm_libraries.sh "$@";
+
+if [ "$BUILD_CLANG_LIBRARIES" = ON ] || [ "$BUILD_LLVM_LIBRARIES" = ON ]
+then
+	./build_llvm_libraries.sh "$@";
+fi

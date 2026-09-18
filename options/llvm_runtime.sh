@@ -38,7 +38,8 @@ LIBUNWIND_OPTIONS=(
 	-DLIBUNWIND_ENABLE_STATIC=ON
 );
 
-if [ "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "runtime_build" ]
+if [ "$BUILD_TYPE" = "release" ] || [ "$BUILD_TYPE" = "runtime_build" ] \
+	|| [ "$BUILD_TYPE" = "libraries_build" ]|| [ "$BUILD_TYPE" = "libraries_test" ]
 then
 	CMAKE_OPTIONS+=(-DCMAKE_BUILD_TYPE=Release);
 

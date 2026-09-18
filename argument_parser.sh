@@ -21,6 +21,8 @@ BUILD_TYPE=release;
 ARCHITECTURES="all";
 BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
+BUILD_CLANG_LIBRARIES=OFF;
+BUILD_LLVM_LIBRARIES=OFF;
 TOOLSET=default;
 
 # -----------------------
@@ -80,6 +82,14 @@ case $a in
 		;;
 	-msys=*)
 		MSYS="${a#*=}";
+		;;
+
+# build_llvm_libraries options
+	-clang_libraries)
+		BUILD_CLANG_LIBRARIES=ON;
+		;;
+	-llvm_libraries)
+		BUILD_LLVM_LIBRARIES=ON;
 		;;
 
 # fail if argument is unknown
