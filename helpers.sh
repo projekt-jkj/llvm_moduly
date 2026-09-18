@@ -73,7 +73,7 @@ install_ninja()
 install_distribution()
 {
 	local dist="$1";
-	local dist_install_path="$INSTALL_TOOLS_BASE/$dist"
+	local dist_install_path="$2/$dist"
 
 	eval "local components=(\"\${${dist@U}[@]}\")";
 
