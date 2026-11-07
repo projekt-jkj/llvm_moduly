@@ -19,8 +19,10 @@ INSTALL_PREFIX=$(pwd)/install;
 BUILD_TYPE=release;
 
 ARCHITECTURES="all";
+LINK_DYNAMIC_LLVM=OFF;
 BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
+
 BUILD_CLANG_LIBRARIES=OFF;
 BUILD_LLVM_LIBRARIES=OFF;
 TOOLSET=default;
@@ -74,6 +76,9 @@ case $a in
 # build_llvm options
 	-architectures=*)
         ARCHITECTURES="${a#*=}";
+		;;
+	-use_dynamic_llvm_libraries)
+		LINK_DYNAMIC_LLVM=ON;
 		;;
 	-clang_tools)
 		BUILD_CLANG_TOOLS=ON;

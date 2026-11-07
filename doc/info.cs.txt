@@ -187,6 +187,9 @@ Argumenty specifické pro LLVM:
 	Lze také použít hodnotu all (všechny platformy)
 	a host (platforma, na které sestavení probíhá).
 	Podrobnosti viz dokumentace LLVM.
+-use_dynamic_llvm_libraries
+	Linkuje dynamické knihovny libLLVM a libclang-cpp při sestavení nástrojů.
+
 -clang_tools
 	Součástí sestavení bude také modul clang_tools.
 -lldb
