@@ -1,0 +1,30 @@
+#!/bin/bash
+# shellcheck disable=SC1111
+
+diff_grep()
+{
+	git diff --cached --name-only \
+	| grep -E "$1" \
+	| {
+		while read -r -e file
+	do
+		if [ -e "$file" ]
+		then
+			echo "$file";
+		else
+			echo "File „$file“ doesn't exist." >&2;
+		fi
+	done
+	}
+}
+
+shell_scripts=$(diff_grep "(\.sh|pre-commit)$");
+
+if [ -n "$shell_scripts" ]
+then
+	echo "=== Shellcheck ==="
+	# shellcheck disable=SC2086
+	shellcheck ${shell_scripts} \
+	|| { echo "Commit aborted"; exit 1; }
+	echo OK;
+fi
