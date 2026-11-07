@@ -24,6 +24,7 @@ BUILD_LLDB=OFF;
 BUILD_CLANG_LIBRARIES=OFF;
 BUILD_LLVM_LIBRARIES=OFF;
 TOOLSET=default;
+OPTIONAL_DEPENDENCIES=OFF;
 
 # -----------------------
 #    main parsing loop
@@ -80,8 +81,15 @@ case $a in
 	-lldb)
 		BUILD_LLDB=ON;
 		;;
+
 	-msys=*)
 		MSYS="${a#*=}";
+		;;
+	-allow_optional_dependencies)
+		OPTIONAL_DEPENDENCIES=ON;
+		;;
+	-force_optional_dependencies)
+		OPTIONAL_DEPENDENCIES=FORCE_ON;
 		;;
 
 # build_llvm_libraries options

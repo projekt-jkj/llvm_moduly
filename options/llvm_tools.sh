@@ -94,6 +94,18 @@ case "$TOOLSET" in
 		;;
 esac
 
+# ---------------------------
+#    optional dependencies
+# ---------------------------
+
+LLVM_OPTIONS+=(
+	"-DLLVM_ENABLE_FFI=$OPTIONAL_DEPENDENCIES"
+	"-DLLVM_ENABLE_LIBEDIT=$OPTIONAL_DEPENDENCIES"
+	"-DLLVM_ENABLE_ZLIB=$OPTIONAL_DEPENDENCIES"
+	"-DLLVM_ENABLE_ZSTD=$OPTIONAL_DEPENDENCIES"
+	"-DLLVM_ENABLE_LIBXML2=$OPTIONAL_DEPENDENCIES"
+);
+
 # -----------------------------
 #    distribution definition
 # -----------------------------

@@ -195,9 +195,16 @@ Argumenty specifické pro LLVM:
 	Součástí sestavení budou také knihovny Clangu využívající runtime z llvm_moduly.
 -llvm_libraries
 	Součástí sestavení budou také knihovny LLVM využívající runtime z llvm_moduly.
+
 -msys={}
 	Zkopíruje dynamicky linkované knihovny ze zadaného prostředí MSYS (např. MINGW64 nebo CLANG64).
 	Díky této volbě nemusí uživatel programy spouštět v MSYS ani ručně zajišťovat závislosti.
+-allow_optional_dependencies
+	Pokud jsou v průběhu sestavení dostupné volitelné knihovny třetích stran, budou zahrnuty jako závislosti LLVM.
+	Podporované knihovny: libffi, libedit, zlib, libzstd, libxml2.
+-force_optional_dependencies
+	Vyžaduje použití volitelných knihoven třetích stran v průběhu sestavení LLVM.
+	Podporované knihovny: libffi, libedit, zlib, libzstd, libxml2.
 
 ┌──────────┐
 │ Motivace │

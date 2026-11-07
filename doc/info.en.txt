@@ -200,6 +200,12 @@ LLVM‑specific arguments:
     Copies dynamically linked libraries from the specified MSYS environment.
     (e.g. MINGW64 or CLANG64)
     This allows users to run programs outside MSYS without manually resolving dependencies.
+-allow_optional_dependencies
+	If there are available optional third party libraries, they will be included as LLVM dependencies.
+	Supported libraries: libffi, libedit, zlib, libzstd, libxml2.
+-force_optional_dependencies
+	Requires to use optional third party libraries during LLVM building.
+	Supported libraries: libffi, libedit, zlib, libzstd, libxml2.
 
 ┌────────────┐
 │ Motivation │
