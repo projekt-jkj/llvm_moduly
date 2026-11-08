@@ -23,6 +23,8 @@ LINK_DYNAMIC_LLVM=OFF;
 BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
 
+BUILD_SANITIZERS=OFF;
+
 BUILD_CLANG_LIBRARIES=OFF;
 BUILD_LLVM_LIBRARIES=OFF;
 TOOLSET=default;
@@ -95,6 +97,11 @@ case $a in
 		;;
 	-force_optional_dependencies)
 		OPTIONAL_DEPENDENCIES=FORCE_ON;
+		;;
+
+# build_llvm_runtime options
+	-sanitizers)
+		BUILD_SANITIZERS=ON;
 		;;
 
 # build_llvm_libraries options

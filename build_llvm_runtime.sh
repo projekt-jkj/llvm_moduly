@@ -35,8 +35,10 @@ log_end "LLVM runtime configure";
 if [ "$SYSTEM" = lin ]
 then
 	compiler_rt_components=(builtins crt);
+	compiler_rt_sanitizers=(asan ubsan tsan lsan);
 else
 	compiler_rt_components=(builtins);
+	compiler_rt_sanitizers=(asan ubsan);
 fi
 
 log_begin "libc++";
@@ -44,6 +46,14 @@ build builtins cxx cxxabi unwind;
 install_ninja "${compiler_rt_components[@]}";
 install "$SYSROOT_DIR" cxx cxx-headers cxx-modules cxxabi cxxabi-headers unwind unwind-headers;
 log_end "libc++";
+
+if [ "$BUILD_SANITIZERS" = ON ]
+then
+	log_begin "LLVM sanitizers";
+	build "${compiler_rt_sanitizers[@]}";
+	install_ninja "${compiler_rt_sanitizers[@]}";
+	log_end "LLVM sanitizers";
+fi
 
 mkdir -p "${INSTALL_RUNTIME_BASE}/licences";
 cp -T "${LLVM_SOURCE}/libcxx/LICENSE.TXT" "${INSTALL_RUNTIME_BASE}/licences/libc++.txt";

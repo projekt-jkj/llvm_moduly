@@ -180,7 +180,6 @@ LLVM‑specific arguments:
     Valid values: release, llvm_build, llvm_test, runtime_build, runtime_test, libraries_build, libraries_test
 -clang={}
 	Allows to set path to the Clang for standalone build of runtime libraries.
-	Umožňuje nastavit cestu ke Clangu při samostatném sestavování runtime knihoven. 
 
 -architectures={}
     Semicolon‑separated list of architectures supported by the built LLVM.
@@ -191,13 +190,17 @@ LLVM‑specific arguments:
 	Links dynamic libraries libLLVM a libclang-cpp during tools build.
 
 -clang_tools
-    Includes the clang_tools module in the build
+    Includes the clang_tools module in the tools build
 -lldb
-    Includes the lldb module in the build.
+    Includes the lldb module in the tools build.
+-sanitizers
+	Includes the compiler-rt sanitizers in the runtime build.
+	Windows: asan, ubsan
+	Linux: asan, ubsan, tsan, lsan
 -clang_libraries
-	The build will also include Clang libraries that use the runtime from llvm_modules.
+	The libraries build will also include Clang libraries that use the runtime from llvm_modules.
 -llvm_libraries
-	The build will also include LLVM libraries that use the runtime from llvm_modules.
+	The libraries build will also include LLVM libraries that use the runtime from llvm_modules.
 
 -msys={}
     Copies dynamically linked libraries from the specified MSYS environment.

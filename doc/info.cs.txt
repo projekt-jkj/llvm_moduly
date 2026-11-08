@@ -191,13 +191,17 @@ Argumenty specifické pro LLVM:
 	Linkuje dynamické knihovny libLLVM a libclang-cpp při sestavení nástrojů.
 
 -clang_tools
-	Součástí sestavení bude také modul clang_tools.
+	Součástí sestavení nástrojů bude také modul clang_tools.
 -lldb
-	Součástí sestavení bude také modul lldb.
+	Součástí sestavení nástrojů bude také modul lldb.
+-sanitizers
+	Součástí sestavení runtime knihoven budou také compile-rt sanitizéry.
+	Windows: asan, ubsan
+	Linux: asan, ubsan, tsan, lsan
 -clang_libraries
-	Součástí sestavení budou také knihovny Clangu využívající runtime z llvm_moduly.
+	Součástí sestavení knihoven budou také knihovny Clangu využívající runtime z llvm_moduly.
 -llvm_libraries
-	Součástí sestavení budou také knihovny LLVM využívající runtime z llvm_moduly.
+	Součástí sestavení knihoven budou také knihovny LLVM využívající runtime z llvm_moduly.
 
 -msys={}
 	Zkopíruje dynamicky linkované knihovny ze zadaného prostředí MSYS (např. MINGW64 nebo CLANG64).
