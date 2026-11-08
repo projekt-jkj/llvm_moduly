@@ -6,12 +6,8 @@ CORES=4;
 
 source "./argument_parser.sh";
 source "./options/mingw.sh";
+source "./options/crt_tools_selection.sh";
 source "./helpers.sh";
-
-export CC="$CLANG";
-export CFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
-export CXX="$CLANG_PP";
-export CXXFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
 
 log_header "MinGW";
 

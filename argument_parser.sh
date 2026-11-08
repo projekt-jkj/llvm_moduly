@@ -222,10 +222,18 @@ INSTALL_LIBRARIES_BASE="${INSTALL_PREFIX}/libraries.${TARGET}";
 if [ -v CLANG_PATH ]
 then
 	CLANG="${CLANG_PATH}/clang${EXE}";
-	CLANG_PP="${INSTALL_TOOLS_BASE}/clang++${EXE}";
+	CLANG_PP="${CLANG_PATH}/clang++${EXE}";
+	CLANG_CPP="${CLANG_PATH}/clang-cpp${EXE}";
+	LLVM_AR="${CLANG_PATH}/llvm-ar${EXE}";
+	LLVM_RANLIB="${CLANG_PATH}/llvm-ranlib${EXE}";
+	LLVM_DLLTOOL="${CLANG_PATH}/llvm-dlltool${EXE}";
 else
 	CLANG="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang${EXE}";
 	CLANG_PP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang++${EXE}";
+	CLANG_CPP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang-cpp${EXE}";
+	LLVM_AR="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ar${EXE}";
+	LLVM_RANLIB="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ranlib${EXE}";
+	LLVM_DLLTOOL="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-dlltool${EXE}";
 fi
 
 RESOURCE_DIR="${INSTALL_RUNTIME_BASE}/resource";

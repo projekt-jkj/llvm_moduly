@@ -3,11 +3,8 @@
 set -ue;
 
 source "./argument_parser.sh";
+source "./options/crt_tools_selection.sh";
 source "./helpers.sh";
-
-export CC="$CLANG";
-export CFLAGS="-resource-dir=${RESOURCE_DIR} --sysroot=${SYSROOT_DIR}";
-export CROSS_COMPILE=llvm-;
 
 log_header "Musl";
 
@@ -44,7 +41,6 @@ make LLVM=1 \
 	-C "${LINUX_SOURCE}" \
 	headers_install \
 >>"$LOG_FILE";
-
 
 cp -T \
 	"${LINUX_SOURCE}/COPYING" \
