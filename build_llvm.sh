@@ -63,7 +63,7 @@ log_begin "LLVM install";
 
 for dist in "${DISTRIBUTIONS[@]}"
 do
-	install_distribution "$dist" "$INSTALL_TOOLS_BASE";
+	install_distribution "$dist" "$(install_dir "$dist")";
 done
 
 log_end "LLVM install";
@@ -76,7 +76,7 @@ then
 
 	for dist in "${DISTRIBUTIONS[@]}"
 	do
-		./copy-msys-dependencies.sh "${INSTALL_TOOLS_BASE}/${dist}" "$MSYS" >>"$LOG_FILE";
+		./copy-msys-dependencies.sh "$(install_dir "$dist")" "$MSYS" >>"$LOG_FILE";
 	done
 
 	log_end "LLVM MSYS dependencies";

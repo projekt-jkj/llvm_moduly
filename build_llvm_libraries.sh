@@ -63,7 +63,7 @@ log_begin "LLVM libraries install";
 
 for dist in "${DISTRIBUTIONS[@]}"
 do
-	install_distribution "$dist" "$INSTALL_LIBRARIES_BASE";
+	install_distribution "$dist" "$(install_dir "$dist")";
 done
 
 log_end "LLVM libraries install";

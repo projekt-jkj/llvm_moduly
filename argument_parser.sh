@@ -190,10 +190,12 @@ if [ "$SYSTEM" = "win" ]
 then
 	EXE=".exe";
 	LLVM_SYSTEM_NAME="Windows";
+	LLVM_PLATFORM_NAME="x86_64";
 elif [ "$SYSTEM" = "lin" ]
 then
 	EXE="";
 	LLVM_SYSTEM_NAME="Linux";
+	LLVM_PLATFORM_NAME="x86_64";
 else
 	echo "Target '$TARGET' isn't supported (unknown system).";
     exit 1;
@@ -222,9 +224,13 @@ MUSL_SOURCE="$(pwd)/source/musl_${MUSL_TAG}";
 LINUX_SOURCE="$(pwd)/source/linux_${LINUX_TAG}";
 
 BUILD_BASE="$(pwd)/build/${TARGET}";
-INSTALL_TOOLS_BASE="${INSTALL_PREFIX}/tools.${TARGET}";
-INSTALL_RUNTIME_BASE="${INSTALL_PREFIX}/runtime.${TARGET}";
-INSTALL_LIBRARIES_BASE="${INSTALL_PREFIX}/libraries.${TARGET}";
+
+install_dir()
+{
+	echo "${INSTALL_PREFIX}/$1.${TARGET}";
+}
+INSTALL_RUNTIME_BASE="$(install_dir runtime)";
+INSTALL_MAIN_TOOLS_BASE="$(install_dir llvm_clang)";
 
 if [ -v CLANG_PATH ]
 then
@@ -235,12 +241,12 @@ then
 	LLVM_RANLIB="${CLANG_PATH}/llvm-ranlib${EXE}";
 	LLVM_DLLTOOL="${CLANG_PATH}/llvm-dlltool${EXE}";
 else
-	CLANG="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang${EXE}";
-	CLANG_PP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang++${EXE}";
-	CLANG_CPP="${INSTALL_TOOLS_BASE}/llvm_clang/bin/clang-cpp${EXE}";
-	LLVM_AR="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ar${EXE}";
-	LLVM_RANLIB="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-ranlib${EXE}";
-	LLVM_DLLTOOL="${INSTALL_TOOLS_BASE}/llvm_clang/bin/llvm-dlltool${EXE}";
+	CLANG="${INSTALL_MAIN_TOOLS_BASE}/bin/clang${EXE}";
+	CLANG_PP="${INSTALL_MAIN_TOOLS_BASE}/bin/clang++${EXE}";
+	CLANG_CPP="${INSTALL_MAIN_TOOLS_BASE}/bin/clang-cpp${EXE}";
+	LLVM_AR="${INSTALL_MAIN_TOOLS_BASE}/bin/llvm-ar${EXE}";
+	LLVM_RANLIB="${INSTALL_MAIN_TOOLS_BASE}/bin/llvm-ranlib${EXE}";
+	LLVM_DLLTOOL="${INSTALL_MAIN_TOOLS_BASE}/bin/llvm-dlltool${EXE}";
 fi
 
 RESOURCE_DIR="${INSTALL_RUNTIME_BASE}/resource";
