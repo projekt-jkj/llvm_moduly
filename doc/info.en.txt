@@ -25,6 +25,9 @@ Helper scripts:
   > Clones all required repositories.
 – options/components.sh
   > Assigns programs and libraries to individual modules.
+- options/crt_tools_selection.sh
+  > Defines environment variables which determine the path to the tools (clang, llvm-ar etc.)
+  > Ensure consistent usage of programs built via the script `build_llvm.sh` when building MinGW and Musl.
 – options/*.sh
   > Definitions of switches for configuring the LLVM project and MinGW.
 – target/*.sh
@@ -85,14 +88,9 @@ Helper directories:
   > Cloned source code.
 – build/{target}/{project}_{tag}/
   > Build artifacts for individual projects or components.
-– install/tools.{target}/{module}/
-  > Final module containing all built tools.
+– install/{module}.{target}/
+  > Final module containing all built tools/libraries.
   > Distributed as an independent package.
-– install/runtime.{target}/
-  > All runtime libraries, headers, and licenses.
-– install/libraries.{target}/{module}/
-  > Final module containing all built libraries.
-  > Depends on the corresponding install/runtime.{target}/ runtime.
 
 ┌──────────────────┐
 │ Module structure │
@@ -110,6 +108,7 @@ clang_tools:
 
 lldb:
 – lldb
+- lldb-dap
 – liblldb
 
 runtime modules (e.g. win_x64, lin_x64)
@@ -118,6 +117,12 @@ runtime modules (e.g. win_x64, lin_x64)
 – MinGW CRT (Windows only)
 – Musl and kernel headers (Linux only)
 (built for the corresponding platform)
+
+sanitizers
+- ASAN
+- UBSAN
+- TSAN (Linux only)
+- LSAN (Linux only)
 
 clang_libraries
 - libclang and other Clang libraries (libclang*.a)
@@ -242,16 +247,6 @@ development. It also lacks libclang and other LLVM libraries.
 Therefore, I decided to create my own distribution.
 My LLVM and MinGW build scripts are inspired by LLVM MinGW.
 
-┌────────────────┐
-│ Completed work │
-└────────────────┘
-The current version includes only the `llvm_clang` module.
-Scripts also support building `clang_tools` and `lldb`
-(but these haven't yet been properly tested).
-
-It also includes a complete runtime for the Windows x64 and Linux x64 platforms.
-The clang and llvm libraries that use this runtime are currently in development.
-
 ┌───────────────────┐
 │ Known limitations │
 └───────────────────┘
@@ -266,9 +261,9 @@ privilegies to install programs build with llvm_moduly,
 which is in contradiction of the goal of this project.
 
 2)
-As a result, the lldb program cannot be compiled on Linux.
-LLVM does not officially support static linking of liblldb.
-For this reason, Linux distribution can't be self-hosted.
+Program lldb requires building of dynamically linked library liblldb
+(statically linking of this library is not officially supported by LLVM).
+For this reason, Linux distribution isn't self-hosted (unlike Windows).
 
 3)
 Clang++ from the linux distribution doesn't have preset the path
@@ -279,13 +274,14 @@ with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
 ┌───────┐
 │ Plans │
 └───────┘
-– Extend runtime packages with dynamic libraries, sanitizers, and other LLVM components.
+– Extend runtime packages with dynamic libraries and other LLVM components.
 – Support for ARM and other hardware platforms.
 – Experiments with LLVM libc.
 
 ┌─────────────┐
 │ Not planned │
 └─────────────┘
+- Support for MacOS, BSD, mobile OS and others.
 – Support for glibc or other C standard library implementations
 – Support for libstdc++, MSVC STL, or other C++ standard library implementations
 – Building tools/libraries that are not part of LLVM, MinGW or Musl.

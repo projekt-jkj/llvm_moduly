@@ -26,6 +26,9 @@ Pomocné skripty:
   > Naklonuje všechny potřebné repozitáře.
 – options/components.sh
   > Přiřazuje programy a knihovny do jednotlivých modulů.
+- options/crt_tools_selection.sh
+  > Definuje proměnné prostředí, které určují cestu k nástrojům (clang, llvm-ar apod.)
+  > Zajišťují konzistentní používání programů sestavených skriptem `build_llvm.sh` při sestavování MinGW a Musl.
 – options/*.sh
   > Definice přepínačů pro konfiguraci LLVM projektu a MinGW.
 – target/*.sh
@@ -85,14 +88,9 @@ Pomocné složky:
   > Naklonované zdrojové kódy.
 – build/{target}/{projekt}_{tag}/
   > Artefakty sestavení pro jednotlivé projekty nebo jejich části.
-– install/tools.{target}/{modul}/
-  > Konečný modul obsahující všechny sestavené nástroje.
+– install/{modul}.{target}/
+  > Konečný modul obsahující všechny sestavené nástroje/knihovny.
   > Distribuovatelný jako samostatný balíček.
-– install/runtime.{target}/
-  > Všechny runtime knihovny, hlavičkové soubory a licence.
-– install/libraries.{target}/{modul}/
-  > Konečný modul obsahující všechny sestavené knihovny.
-  > Závisí na odpovídajícím install/runtime.{target}/ runtime.
 
 ┌──────────────────┐
 │ Struktura modulů │
@@ -110,6 +108,7 @@ clang_tools:
 
 lldb:
 – lldb
+- lldb-dap
 – liblldb
 
 runtime moduly (např. win_x64, lin_x64)
@@ -118,6 +117,12 @@ runtime moduly (např. win_x64, lin_x64)
 – MinGW CRT (pouze Windows)
 – Musl a kernelové hlavičky (pouze Linux)
 (sestavené pro příslušnou platformu)
+
+sanitizers
+- ASAN
+- UBSAN
+- TSAN (pouze Linux)
+- LSAN (pouze Linux)
 
 clang_libraries
 - libclang a další Clang knihovny (libclang*.a)
@@ -237,15 +242,6 @@ pro nativní, případně i křížový vývoj. Nevyhovuje mi také rozsahem: di
 neobsahují libclang a další LLVM knihovny. Proto jsem se rozhodla vytvořit vlastní distribuci.
 Moje skripty pro sestavení LLVM i MinGW jsou inspirované LLVM MinGW.
 
-┌────────────────────┐
-│ Co už je dokončeno │
-└────────────────────┘
-Dosavadní verze obsahuje pouze modul `llvm_clang`, skripty podporují také
-sestavení modulů clang_tools a lldb (nebyly však řádně testovány).
-
-Součástí je také kompletní runtime pro platformy Windows x64 a Linux x64.
-Knihovny clang a llvm využívající tento runtime jsou v přípravě.
-
 ┌───────────────┐
 │ Známá omezení │
 └───────────────┘
@@ -260,26 +256,27 @@ pomocí llvm_moduly rootovská oprávnění, což je v rozporu
 s cílem tohoto projektu.
 
 2)
-V důsledku toho nelze na Linuxu sestavit program lldb.
-Statické linkování liblldb LLVM oficiálně nepodporuje.
-Z toho důvodu linuxová distribuce není self-hosted.
+Program lldb vyžaduje sestavení dynamicky linkované knihovny
+liblldb (statické linkování této knihovny LLVM oficiálně nepodporuje).
+Kvůli tomuto omezení Linuxová distribuce není self-hosted (na rozdíl od Windows).
 
 3)
 Clang++ v linuxové distribuci nemá přednastavenou cestu k hlavičkám
 knihovny libc++. Je proto nutné Clang++ pouštět s argumentem
 `-I ~/[path to your runtime]/sysroot/include/c++/v1`.
-(dpoporučuji nastavit pomocí CXXFLAGS, clang++.cfg nebo skrze sestavovací systém)
+(dopoporučuji nastavit pomocí CXXFLAGS, clang++.cfg nebo skrze sestavovací systém)
 
 ┌───────┐
 │ Plány │
 └───────┘
-– Rozšíření runtime balíčků o dynamické knihovny, sanitizéry a další části LLVM.
+– Rozšíření runtime balíčků o dynamické knihovny a další části LLVM.
 – Podpora ARMu a dalších hardwarových platforem.
 – Experimenty s LLVM libc.
 
 ┌─────────────────┐
 │ Co není v plánu │
 └─────────────────┘
+- Podpora MacOS, BSD, mobilních OS a dalších.
 – Podpora glibc nebo jiných implementací standardní knihovny C.
 – Podpora libstdc++, MSVC STL nebo jiných implementací standardní knihovny C++.
 – Sestavení nástrojů/knihoven, které nejsou součástí LLVM, MinGW nebo Musl.
