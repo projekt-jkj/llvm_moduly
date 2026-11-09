@@ -7,7 +7,7 @@
 #    default values for optional arguments
 # -------------------------------------------
 
-LLVM_TAG="llvmorg-23.1.0";
+LLVM_TAG="llvmorg-23.1.5";
 MINGW_TAG="v14.0.0";
 MUSL_TAG="v1.2.6";
 LINUX_TAG="v7.2";
