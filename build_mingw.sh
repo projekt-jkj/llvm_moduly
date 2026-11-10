@@ -45,6 +45,23 @@ mkcd "${MINGW_BUILD_DIR}";
 
 log_end "MinGW crt";
 
+log_begin "MinGW winpthreads";
+
+MINGW_PTHREADS_DIR="${BUILD_BASE}/mingw_pthreads_${MINGW_TAG}";
+mkcd "${MINGW_PTHREADS_DIR}";
+
+{
+	"${MINGW_SOURCE}/mingw-w64-libraries/winpthreads/configure" \
+		"${MINGW_COMMON_OPTIONS[@]}" \
+		"${MINGW_PTHREADS_OPTIONS[@]}";
+
+	make "-j$CORES";
+	make install;
+} \
+>>"$LOG_FILE";
+
+log_end "MinGW winpthreads";
+
 mkdir -p "$INSTALL_RUNTIME_BASE/licences";
 
 cp -T \
@@ -56,3 +73,6 @@ cp -T \
 cp -T \
 	"${MINGW_SOURCE}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt" \
 	"$INSTALL_RUNTIME_BASE/licences/mingw_w64_runtime.txt";
+cp -T \
+	"${MINGW_SOURCE}/mingw-w64-libraries/winpthreads/COPYING" \
+	"$INSTALL_RUNTIME_BASE/licences/mingw_w64_winpthreads.txt";
