@@ -191,8 +191,8 @@ LLVM‑specific arguments:
     Example: AArch64;Mips;WebAssembly;X86;XCore
     Special values: all (all platforms), host (platform used for building).
     See LLVM documentation for details.
--use_dynamic_llvm_libraries
-	Links dynamic libraries libLLVM a libclang-cpp during tools build.
+-use_static_llvm_libraries
+	Statically links libraries `libLLVM` a `libclang-cpp` during tools build.
 
 -clang_tools
     Includes the clang_tools module in the tools build

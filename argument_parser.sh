@@ -19,7 +19,7 @@ INSTALL_PREFIX=$(pwd)/install;
 BUILD_TYPE=release;
 
 ARCHITECTURES="all";
-LINK_DYNAMIC_LLVM=OFF;
+LINK_DYNAMIC_LLVM=ON;
 BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
 
@@ -79,8 +79,8 @@ case $a in
 	-architectures=*)
         ARCHITECTURES="${a#*=}";
 		;;
-	-use_dynamic_llvm_libraries)
-		LINK_DYNAMIC_LLVM=ON;
+	-use_static_llvm_libraries)
+		LINK_DYNAMIC_LLVM=OFF;
 		;;
 	-clang_tools)
 		BUILD_CLANG_TOOLS=ON;
