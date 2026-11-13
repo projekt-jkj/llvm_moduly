@@ -24,7 +24,7 @@ Pomocné skripty:
     (TARGET, PLATFORM, cesty ke zdrojákům apod.)
 – helpers.sh
   > Definice pomocných funkcí, které jsou využity ve více různých skriptech.
-– init_repozitories.sh
+– init_repositories.sh
   > Naklonuje všechny potřebné repozitáře.
 – options/components.sh
   > Přiřazuje programy a knihovny do jednotlivých modulů.
@@ -65,6 +65,10 @@ Vývojové skripty:
   > Zabalí všechny moduly uložené ve složce INSTALLATION_PATH do složky WHERE ve formátu .tar.xz 
   > Pokud je předán argument TAG, pokusí se také nahrát balíček jako přílohu k příslušnému GitHub releasu.
 
+– dev/doc_check.sh
+  > Zkontroluje úplnost dokumentace a konzistenci mezi českou a anglickou verzí.
+  > Pouze jednoduché kontroly (soubory, přepínače, speciální znaky).
+
 Sestavovací skripty:
 
 – build_all.sh
@@ -78,7 +82,7 @@ Sestavovací skripty:
 
 – build_runtime.sh
   > Spustí následující skripty v závislosti na cílové platformě.
-– install_resourse_headers.sh
+– install_resource_headers.sh
   > Nainstaluje hlavičkové soubory Clangu.
 – build_mingw.sh
   > Sestaví a nainstaluje MinGW runtime knihovny.
@@ -87,6 +91,9 @@ Sestavovací skripty:
 – build_llvm_runtime.sh
   > Sestaví a nainstaluje LLVM knihovny (compiler-rt, libc++, …).
   > V případě testovací konfigurace také spustí testy.
+– build_win_threads.sh
+  > Sestaví a nainstaluje knihovnu WinPthreads (z MinGW).
+  > Zkopíruje do sysrootu hlavičkový soubor threads.h (z c11threads).
 
 Pomocné složky:
 

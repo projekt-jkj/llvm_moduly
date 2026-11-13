@@ -8,7 +8,7 @@ LLVM tools (clang, lld, …) and runtime libraries
 (libc++, compiler-rt, …). Because LLVM’s implementation of
 the C standard library is incomplete, I use
 a custom MinGW CRT build for Windows or Musl
-for Linux instead. In case of Windows it was neccessery
+for Linux instead. In case of Windows it was necessary
 to include c11threads library due to support of
 C11 standard threads.
 
@@ -23,7 +23,7 @@ Helper scripts:
   > Also defines basic variables (TARGET, PLATFORM, source paths, etc.)
 – helpers.sh
   > Definitions of helper functions used across multiple scripts.
-– init_repozitories.sh
+– init_repositories.sh
   > Clones all required repositories.
 – options/components.sh
   > Assigns programs and libraries to individual modules.
@@ -65,6 +65,10 @@ Vývojové skripty:
   > Packs all modules stored in the INSTALLATION_PATH folder into the WHERE folder in .tar.xz format
   > If the TAG argument is provided, it will also attempt to upload the package as an asset to the corresponding GitHub release.
 
+– dev/doc_check.sh
+  > Checks completeness of documentation a consistency between Czech and English version.
+  > Simple checks only (files, switches, special characters).
+
 Build scripts:
 
 – build_all.sh
@@ -78,7 +82,7 @@ Build scripts:
 
 – build_runtime.sh
   > Runs the following scripts depending on the target platform.
-– install_resourse_headers.sh
+– install_resource_headers.sh
   > Installs Clang resource headers
 – build_mingw.sh
   > Builds and installs MinGW runtime libraries
@@ -87,6 +91,9 @@ Build scripts:
 – build_llvm_runtime.sh
   > Builds and installs LLVM runtime libraries (compiler‑rt, libc++, …).
   > Runs tests in test configurations.
+– build_win_threads.sh
+  > Builds and installs WinPthreads library (from MinGW).
+  > Copies header file hlavičkový soubor threads.h into sysroot (from c11threads).
 
 Helper directories:
 
@@ -262,7 +269,7 @@ My LLVM and MinGW build scripts are inspired by LLVM MinGW.
 └───────────────────┘
 1)
 Linux distribution doesn't support dynamic linking.
-This is due to the neccessity to distribute ld-musl.so
+This is due to the necessity to distribute ld-musl.so
 dynamic linker with the runtime. The path to this file
 must be known in the compile time, then it can't be configured.
 Because of the fact that Musl runtime isn't preinstalled
@@ -277,7 +284,7 @@ For this reason, Linux distribution isn't self-hosted (unlike Windows).
 
 3)
 Clang++ from the linux distribution doesn't have preset the path
-to libc++ headers. Therefore it is neccessery to run clang++
+to libc++ headers. Therefore it is necessary to run clang++
 with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
 (I recommend to set it using CXXFLAGS, clang++.cfg or via build system)
 

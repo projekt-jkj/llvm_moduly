@@ -28,3 +28,13 @@ then
 	|| { echo "Commit aborted"; exit 1; }
 	echo OK;
 fi
+
+DOCS="doc/info\..*\.txt";
+DOCS_COUNT=$(dir doc/info.*.txt | wc -w);
+DOCS_STAGED=$(git diff --cached --name-only | grep "$DOCS"  | wc -w);
+
+if [ "$DOCS_COUNT" -ne "$DOCS_STAGED" ] && [ "$DOCS_STAGED" -gt 0 ]
+then
+	echo "=== Documentation ==="
+	echo "Warning: documentation was not updated for each language."
+fi

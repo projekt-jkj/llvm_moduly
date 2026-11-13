@@ -61,7 +61,7 @@ case $a in
 	-log=*)
 		LOG_FILE="${a#*=}";
 		;;
-    -cores=*)
+	-cores=*)
         CORES="${a#*=}";
         ;;
 	-install_prefix=*)
