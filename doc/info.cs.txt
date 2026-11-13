@@ -28,7 +28,7 @@ Pomocné skripty:
   > Naklonuje všechny potřebné repozitáře.
 – options/components.sh
   > Přiřazuje programy a knihovny do jednotlivých modulů.
-- options/crt_tools_selection.sh
+– options/crt_tools_selection.sh
   > Definuje proměnné prostředí, které určují cestu k nástrojům (clang, llvm-ar apod.)
   > Zajišťují konzistentní používání programů sestavených skriptem `build_llvm.sh` při sestavování MinGW a Musl.
 – options/*.sh
@@ -42,7 +42,7 @@ Pomocné skripty:
 – copy-msys-dependencies.sh
   > Zkopíruje dynamické knihovny z MSYS prostředí, ve kterém bylo llvm_moduly sestaveno.
   > Převzato z repozitáře LLVM MinGW (https://github.com/mstorsjo/llvm-mingw).
-- external/
+– external/
   > Obsahuje upravené soubory z jiných projektů.
   > Seznam: c11threads (https://github.com/jtsiomb/c11threads)
 
@@ -56,12 +56,12 @@ Vývojové skripty:
   > COMPONENTS = volitelný seznam komponent, které budou nainstalovány
   > Runtime pro daný target je nainstalován vždy.
 
-- dev/info.sh INSTALLATION_PATH
+– dev/info.sh INSTALLATION_PATH
   > Rychlá kontrola funkčnosti sady nástrojů pro C/C++.
   > Vyžaduje nainstalování balíčku `llvm_clang` a runtimu pro příslušný target,
     např. pomocí skriptu dev/install.sh
 
-- dev/upload.sh INSTALLATION_PATH WHERE tag
+– dev/upload.sh INSTALLATION_PATH WHERE tag
   > Zabalí všechny moduly uložené ve složce INSTALLATION_PATH do složky WHERE ve formátu .tar.xz 
   > Pokud je předán argument TAG, pokusí se také nahrát balíček jako přílohu k příslušnému GitHub releasu.
 
@@ -121,7 +121,7 @@ clang_tools:
 
 lldb:
 – lldb
-- lldb-dap
+– lldb-dap
 – liblldb
 
 runtime moduly (např. win_x64, lin_x64)
@@ -132,16 +132,16 @@ runtime moduly (např. win_x64, lin_x64)
 (sestavené pro příslušnou platformu)
 
 sanitizers
-- ASAN
-- UBSAN
-- TSAN (pouze Linux)
-- LSAN (pouze Linux)
+– ASAN
+– UBSAN
+– TSAN (pouze Linux)
+– LSAN (pouze Linux)
 
 clang_libraries
-- libclang a další Clang knihovny (libclang*.a)
+– libclang a další Clang knihovny (libclang*.a)
 
 llvm_libraries
-- LLVM knihovny (libLLVM*.a)
+– LLVM knihovny (libLLVM*.a)
 
 ┌───────────────────┐
 │ Argumenty skriptů │
@@ -293,7 +293,7 @@ knihovny libc++. Je proto nutné Clang++ pouštět s argumentem
 ┌─────────────────┐
 │ Co není v plánu │
 └─────────────────┘
-- Podpora MacOS, BSD, mobilních OS a dalších.
+– Podpora MacOS, BSD, mobilních OS a dalších.
 – Podpora glibc nebo jiných implementací standardní knihovny C.
 – Podpora libstdc++, MSVC STL nebo jiných implementací standardní knihovny C++.
 – Sestavení nástrojů/knihoven, které nejsou součástí LLVM, MinGW nebo Musl.

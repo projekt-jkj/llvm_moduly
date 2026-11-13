@@ -18,7 +18,7 @@ C11 standard threads.
 Helper scripts:
 
 – argument_parser.sh
-  > Contains the command‑line argument parsing algorithm.
+  > Contains the command-line argument parsing algorithm.
   > Shared by all other scripts.
   > Also defines basic variables (TARGET, PLATFORM, source paths, etc.)
 – helpers.sh
@@ -27,13 +27,13 @@ Helper scripts:
   > Clones all required repositories.
 – options/components.sh
   > Assigns programs and libraries to individual modules.
-- options/crt_tools_selection.sh
+– options/crt_tools_selection.sh
   > Defines environment variables which determine the path to the tools (clang, llvm-ar etc.)
   > Ensure consistent usage of programs built via the script `build_llvm.sh` when building MinGW and Musl.
 – options/*.sh
   > Definitions of switches for configuring the LLVM project and MinGW.
 – target/*.sh
-  > Runs `build_all.sh` with predefined command‑line arguments.
+  > Runs `build_all.sh` with predefined command-line arguments.
   > Serves as both an example and documentation of what is actually supported.
   > An optional argument allows changing the script being executed.
   > Additional arguments are passed to the executed script.
@@ -41,7 +41,7 @@ Helper scripts:
 – copy-msys-dependencies.sh
   > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
   > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
-- external/
+– external/
   > Contains modified files from other projects.
   > List: c11threads (https://github.com/jtsiomb/c11threads)
 
@@ -55,13 +55,13 @@ Vývojové skripty:
   > COMPONENTS = optional list of components to install
   > Runtime for the given target is always installed.
 
-- dev/info.sh INSTALLATION_PATH
+– dev/info.sh INSTALLATION_PATH
   > Quick sanity check for the C/C++ toolchain.
   > Requires the installation of the `llvm_clang` package
     and the runtime for the relevant target,
 	e.g. using dev/install.sh skript.
 
-- dev/upload.sh INSTALLATION_PATH WHERE tag
+– dev/upload.sh INSTALLATION_PATH WHERE tag
   > Packs all modules stored in the INSTALLATION_PATH folder into the WHERE folder in .tar.xz format
   > If the TAG argument is provided, it will also attempt to upload the package as an asset to the corresponding GitHub release.
 
@@ -89,7 +89,7 @@ Build scripts:
 – build_musl.sh
   > Builds and installs Musl and Linux kernel headers.
 – build_llvm_runtime.sh
-  > Builds and installs LLVM runtime libraries (compiler‑rt, libc++, …).
+  > Builds and installs LLVM runtime libraries (compiler-rt, libc++, …).
   > Runs tests in test configurations.
 – build_win_threads.sh
   > Builds and installs WinPthreads library (from MinGW).
@@ -121,32 +121,32 @@ clang_tools:
 
 lldb:
 – lldb
-- lldb-dap
+– lldb-dap
 – liblldb
 
 runtime modules (e.g. win_x64, lin_x64)
-– compiler‑rt (builtins only)
+– compiler-rt (builtins only)
 – libc++, libc++abi, libunwind
 – MinGW CRT (Windows only)
 – Musl and kernel headers (Linux only)
 (built for the corresponding platform)
 
 sanitizers
-- ASAN
-- UBSAN
-- TSAN (Linux only)
-- LSAN (Linux only)
+– ASAN
+– UBSAN
+– TSAN (Linux only)
+– LSAN (Linux only)
 
 clang_libraries
-- libclang and other Clang libraries (libclang*.a)
+– libclang and other Clang libraries (libclang*.a)
 
 llvm_libraries
-- LLVM libraries (libLLVM*.a)
+– LLVM libraries (libLLVM*.a)
 
 ┌──────────────────┐
 │ Script arguments │
 └──────────────────┘
-All scripts share the same command‑line argument parser (`argument_parser.sh`).
+All scripts share the same command-line argument parser (`argument_parser.sh`).
 As a result, if a script receives an argument it does n't use,
 but another script does, it isn't considered an error.
 
@@ -191,7 +191,7 @@ Shared arguments:
     Directory where built programs and libraries are copied.
     Default: `$(pwd)/install`
 
-LLVM‑specific arguments:
+LLVM-specific arguments:
 
 -build_type={}
     Determines which parts of LLVM are built and with what optimizations.
@@ -200,7 +200,7 @@ LLVM‑specific arguments:
 	Allows to set path to the Clang for standalone build of runtime libraries.
 
 -architectures={}
-    Semicolon‑separated list of architectures supported by the built LLVM.
+    Semicolon-separated list of architectures supported by the built LLVM.
     Example: AArch64;Mips;WebAssembly;X86;XCore
     Special values: all (all platforms), host (platform used for building).
     See LLVM documentation for details.
@@ -259,7 +259,7 @@ complete LLVM runtime and MinGW CRT, making it almost perfectly
 compatible with the LLVM runtime on glibc/musl.
 However, LLVM MinGW targets something else: it is a
 multiplatform toolchain for Windows development, while I need
-a consistent multiplatform toolchain for native and cross‑platform
+a consistent multiplatform toolchain for native and cross-platform
 development. It also lacks libclang and other LLVM libraries.
 Therefore, I decided to create my own distribution.
 My LLVM and MinGW build scripts are inspired by LLVM MinGW.
@@ -298,7 +298,7 @@ with `-I ~/[path to your runtime]/sysroot/include/c++/v1` argument.
 ┌─────────────┐
 │ Not planned │
 └─────────────┘
-- Support for MacOS, BSD, mobile OS and others.
+– Support for MacOS, BSD, mobile OS and others.
 – Support for glibc or other C standard library implementations
 – Support for libstdc++, MSVC STL, or other C++ standard library implementations
 – Building tools/libraries that are not part of LLVM, MinGW or Musl.
