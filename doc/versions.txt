@@ -5,7 +5,8 @@ Argon
 	Linux	v7.2 (tag)
 
 Argon 1
-	LLVM	llvmorg-23.1.5 (tag)
-	MinGW	v14.0.0 (tag)
-	Musl	v1.2.6 (tag)
-	Linux	v7.2 (tag)
+	LLVM		llvmorg-23.1.5 (tag)
+	MinGW		v14.0.0 (tag)
+	Musl		v1.2.6 (tag)
+	Linux		v7.2 (tag)
+	c11threads	5f8e649761f61f48d55bbf961b011130d80cafaa (commit)

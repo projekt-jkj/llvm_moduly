@@ -24,6 +24,7 @@ BUILD_CLANG_TOOLS=OFF;
 BUILD_LLDB=OFF;
 
 BUILD_SANITIZERS=OFF;
+ENABLE_WIN_THREADS=ON;
 
 BUILD_CLANG_LIBRARIES=OFF;
 BUILD_LLVM_LIBRARIES=OFF;
@@ -110,6 +111,11 @@ case $a in
 		;;
 	-llvm_libraries)
 		BUILD_LLVM_LIBRARIES=ON;
+		;;
+
+# build_mingw options
+	-disable_win_threads)
+		ENABLE_WIN_THREADS=OFF;
 		;;
 
 # fail if argument is unknown
@@ -222,6 +228,7 @@ LLVM_SOURCE="$(pwd)/source/llvm_${LLVM_TAG}";
 MINGW_SOURCE="$(pwd)/source/mingw_${MINGW_TAG}";
 MUSL_SOURCE="$(pwd)/source/musl_${MUSL_TAG}";
 LINUX_SOURCE="$(pwd)/source/linux_${LINUX_TAG}";
+EXTERNAL_SOURCE="$(pwd)/external";
 
 BUILD_BASE="$(pwd)/build/${TARGET}";
 

@@ -8,7 +8,9 @@ LLVM tools (clang, lld, …) and runtime libraries
 (libc++, compiler-rt, …). Because LLVM’s implementation of
 the C standard library is incomplete, I use
 a custom MinGW CRT build for Windows or Musl
-for Linux instead.
+for Linux instead. In case of Windows it was neccessery
+to include c11threads library due to support of
+C11 standard threads.
 
 ┌──────────────────────┐
 │ Repository structure │
@@ -35,9 +37,13 @@ Helper scripts:
   > Serves as both an example and documentation of what is actually supported.
   > An optional argument allows changing the script being executed.
   > Additional arguments are passed to the executed script.
+
 – copy-msys-dependencies.sh
   > Copies dynamic libraries from the MSYS environment used to build llvm_moduly.
   > Taken from the LLVM MinGW repository (https://github.com/mstorsjo/llvm-mingw).
+- external/
+  > Contains modified files from other projects.
+  > List: c11threads (https://github.com/jtsiomb/c11threads)
 
 Vývojové skripty:
 
@@ -207,6 +213,10 @@ LLVM‑specific arguments:
 -llvm_libraries
 	The libraries build will also include LLVM libraries that use the runtime from llvm_modules.
 
+-disable_win_threads
+	When compiling for Windows, skips WinPthreads building (including c11threads).
+	When compiling for Linux doesn't have any effect.
+
 -msys={}
     Copies dynamically linked libraries from the specified MSYS environment.
     (e.g. MINGW64 or CLANG64)
@@ -296,3 +306,4 @@ https://musl.libc.org/
 https://kernel.org/
 https://www.msys2.org/
 https://github.com/mstorsjo/llvm-mingw
+https://github.com/jtsiomb/c11threads

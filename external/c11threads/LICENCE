@@ -1,0 +1,15 @@
+Origin: https://github.com/jtsiomb/c11threads (commit 5f8e649761f61f48d55bbf961b011130d80cafaa)
+
+Authors:
+
+John Tsiombikas nuclear@member.fsf.org: original POSIX threads wrapper
+Oliver Old oliver.old@outlook.com: win32 implementation
+I place this piece of code in the public domain. Feel free to use as you see fit. I'd appreciate it if you keep my name at the top of the code somewhere, but whatever.
+
+Modified for llvm_moduly by Basvas j.k.j
+
+Changes:
+- renamed c11threads.h to threads.h
+- changed the default implementation to POSIX threads
+- the Win32 implementation is not distributed as part of llvm_moduly, but it still can be used if compiled separately
+  > to do so define C11THREADS_WIN32 macro before including threads.h

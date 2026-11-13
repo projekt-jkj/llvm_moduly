@@ -7,8 +7,10 @@ platformách. Toho dosahuje pomocí důsledného
 využívání LLVM nástrojů (clang, lld, …)
 a runtime knihoven (libc++, compiler-rt, …).
 Protože LLVM implementace standardní knihovny C
-není komplentní, použila jsem místo ní vlastní
+není kompletní, použila jsem místo ní vlastní
 sestavení MinGW CRT pro Windows nebo Musl pro Linux.
+V případě Windows bylo ještě nutné doplnit knihovnu
+c11threads kvůli podpoře vláken podle standardu C11.
 
 ┌──────────────────────┐
 │ Struktura repozitáře │
@@ -36,9 +38,13 @@ Pomocné skripty:
   > Slouží jako ukázka i jako dokumentace toho, co je skutečně podporováno.
   > Volitelný argument umožňuje změnit spuštěný skript.
   > Případné další argumenty jsou předány spuštěnému skriptu.
+
 – copy-msys-dependencies.sh
   > Zkopíruje dynamické knihovny z MSYS prostředí, ve kterém bylo llvm_moduly sestaveno.
   > Převzato z repozitáře LLVM MinGW (https://github.com/mstorsjo/llvm-mingw).
+- external/
+  > Obsahuje upravené soubory z jiných projektů.
+  > Seznam: c11threads (https://github.com/jtsiomb/c11threads)
 
 Vývojové skripty:
 
@@ -208,6 +214,10 @@ Argumenty specifické pro LLVM:
 -llvm_libraries
 	Součástí sestavení knihoven budou také knihovny LLVM využívající runtime z llvm_moduly.
 
+-disable_win_threads
+	Při překladu pro Windows vynechá sestavení WinPthreads (včetně c11threads).
+	Při překladu pro Linux nemá efekt.
+
 -msys={}
 	Zkopíruje dynamicky linkované knihovny ze zadaného prostředí MSYS (např. MINGW64 nebo CLANG64).
 	Díky této volbě nemusí uživatel programy spouštět v MSYS ani ručně zajišťovat závislosti.
@@ -291,3 +301,4 @@ https://musl.libc.org/
 https://kernel.org/
 https://www.msys2.org/
 https://github.com/mstorsjo/llvm-mingw
+https://github.com/jtsiomb/c11threads
