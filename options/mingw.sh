@@ -7,7 +7,6 @@ MINGW_COMMON_OPTIONS=(
 	--enable-silent-rules
 );
 MINGW_HEADERS_OPTIONS=(
-	--enable-idl
 	--with-default-msvcrt=ucrt
 	--with-default-win32-winnt=0x601
 	INSTALL=install -C

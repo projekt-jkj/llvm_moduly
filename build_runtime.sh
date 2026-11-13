@@ -15,3 +15,8 @@ then
 fi
 
 ./build_llvm_runtime.sh "$@";
+
+if [ "$SYSTEM" = "win" ] && [ "$ENABLE_WIN_THREADS" = "ON" ]
+then
+	./build_win_threads.sh "$@";
+fi
