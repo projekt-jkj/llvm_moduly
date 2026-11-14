@@ -212,3 +212,19 @@ LLVM_LIBRARIES=(
 	LLVMX86TargetMCA
 	LLVMXRay
 );
+
+if [ "$SYSTEM" = lin ]
+then
+	COMPILER_BUILTINS=(builtins crt);
+	SANITIZERS=(asan ubsan tsan lsan);
+else
+	COMPILER_BUILTINS=(builtins);
+	SANITIZERS=(asan ubsan);
+	SANITIZERS_COMPONENTS=(
+		"clang_rt.asan-dynamic-${LLVM_PLATFORM_NAME}"
+		"clang_rt.asan_dynamic_runtime_thunk-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_standalone-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_standalone_cxx-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_loop_detect-${LLVM_PLATFORM_NAME}"
+	);
+fi
