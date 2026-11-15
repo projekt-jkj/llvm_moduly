@@ -61,7 +61,12 @@ then
 	log_end "LLVM sanitizers configure";
 
 	log_begin "LLVM sanitizers build";
-	build "${SANITIZERS[@]}";
+	if [ "$SYSTEM" = "lin" ]
+	then
+		build "${SANITIZERS_COMPONENTS[@]}";
+	else
+		build "${SANITIZERS[@]}";
+	fi
 	log_end "LLVM sanitizers build";
 	
 	log_begin "LLVM sanitizers install";

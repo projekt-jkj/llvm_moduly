@@ -217,12 +217,31 @@ if [ "$SYSTEM" = lin ]
 then
 	COMPILER_BUILTINS=(builtins crt);
 	SANITIZERS=(asan ubsan tsan lsan);
+	SANITIZERS_COMPONENTS=(
+		"clang_rt.asan-preinit-${LLVM_PLATFORM_NAME}"
+		"clang_rt.asan-${LLVM_PLATFORM_NAME}"
+		"clang_rt.asan_cxx-${LLVM_PLATFORM_NAME}"
+		"clang_rt.asan_static-${LLVM_PLATFORM_NAME}"
+
+		"clang_rt.ubsan_loop_detect-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_minimal-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_standalone-${LLVM_PLATFORM_NAME}"
+		"clang_rt.ubsan_standalone_cxx-${LLVM_PLATFORM_NAME}"
+
+		"clang_rt.lsan-${LLVM_PLATFORM_NAME}"
+
+		"clang_rt.tsan-${LLVM_PLATFORM_NAME}"
+		"clang_rt.tsan-${LLVM_PLATFORM_NAME}-symbols"
+		"clang_rt.tsan_cxx-${LLVM_PLATFORM_NAME}"
+		"clang_rt.tsan_cxx-${LLVM_PLATFORM_NAME}-symbols"
+	);
 else
 	COMPILER_BUILTINS=(builtins);
 	SANITIZERS=(asan ubsan);
 	SANITIZERS_COMPONENTS=(
 		"clang_rt.asan-dynamic-${LLVM_PLATFORM_NAME}"
 		"clang_rt.asan_dynamic_runtime_thunk-${LLVM_PLATFORM_NAME}"
+
 		"clang_rt.ubsan_standalone-${LLVM_PLATFORM_NAME}"
 		"clang_rt.ubsan_standalone_cxx-${LLVM_PLATFORM_NAME}"
 		"clang_rt.ubsan_loop_detect-${LLVM_PLATFORM_NAME}"
