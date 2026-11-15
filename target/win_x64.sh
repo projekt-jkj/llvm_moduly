@@ -9,4 +9,5 @@ shift;
 	-toolset=clang \
 	-clang_tools \
 	-lldb \
+	-sanitizers \
 	"$@";
