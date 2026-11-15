@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 
 COMMAND="${1:-./build_all.sh}";
 shift;
@@ -10,4 +11,6 @@ shift;
 	-clang_tools \
 	-lldb \
 	-sanitizers \
+	-clang_libraries \
+	-llvm_libraries \
 	"$@";
