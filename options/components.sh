@@ -231,9 +231,7 @@ then
 		"clang_rt.lsan-${LLVM_PLATFORM_NAME}"
 
 		"clang_rt.tsan-${LLVM_PLATFORM_NAME}"
-		"clang_rt.tsan-${LLVM_PLATFORM_NAME}-symbols"
 		"clang_rt.tsan_cxx-${LLVM_PLATFORM_NAME}"
-		"clang_rt.tsan_cxx-${LLVM_PLATFORM_NAME}-symbols"
 	);
 else
 	COMPILER_BUILTINS=(builtins);
@@ -246,4 +244,11 @@ else
 		"clang_rt.ubsan_standalone_cxx-${LLVM_PLATFORM_NAME}"
 		"clang_rt.ubsan_loop_detect-${LLVM_PLATFORM_NAME}"
 	);
+fi
+
+if [ "$LINK_DYNAMIC_LLVM" = "ON" ]
+then
+	LLVM_CLANG+=(clang-cpp LLVM);
+	CLANG_TOOLS+=(clang-cpp LLVM);
+	LLDB+=(clang-cpp LLVM);
 fi
